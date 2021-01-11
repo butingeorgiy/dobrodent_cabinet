@@ -19,7 +19,9 @@ class CreateIllnessesTable extends Migration
             $table->string('description', 1024);
             $table->bigInteger('patient_id')->unsigned();
             $table->tinyInteger('illness_status_id')->unsigned();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->nullable()->default(
+                DB::raw('CURRENT_TIMESTAMP()')
+            );
 
 
             $table->foreign('illness_status_id')

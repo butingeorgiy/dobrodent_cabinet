@@ -2,25 +2,22 @@
 
 namespace App\Http\Middleware;
 
+use App\Facades\Authorization;
 use Closure;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class RedirectIfAuthenticated
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string|null  $guard
-     * @return mixed
-     */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next, $role)
     {
-        if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+        if (!in_array($role, ['administrator', 'doctor', 'patient'])) {
+            abort(500, 'Undefined value of $role variable:' . $role);
         }
 
-        return $next($request);
+        if (!Authorization::check()) {
+            return $next($request);
+        } else {
+            return redirect('/' . $role);
+        }
     }
 }

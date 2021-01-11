@@ -24,7 +24,9 @@ class CreateDoctorReviewsTable extends Migration
              * From 1 to 5
              */
             $table->tinyInteger('mark');
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->nullable()->default(
+                DB::raw('CURRENT_TIMESTAMP()')
+            );
 
 
             $table->foreign('patient_id')

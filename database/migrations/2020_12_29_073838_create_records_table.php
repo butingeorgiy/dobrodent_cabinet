@@ -20,7 +20,9 @@ class CreateRecordsTable extends Migration
             $table->bigInteger('illness_id')->unsigned();
             $table->integer('doctor_id')->unsigned();
             $table->tinyInteger('record_type_id')->unsigned();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->nullable()->default(
+                DB::raw('CURRENT_TIMESTAMP()')
+            );
 
 
             $table->foreign('illness_id')

@@ -23,7 +23,9 @@ class CreateAdministratorTokensTable extends Migration
              */
             $table->char('token', 32);
             $table->integer('administrator_id')->unsigned();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->nullable()->default(
+                DB::raw('CURRENT_TIMESTAMP()')
+            );
 
             /**
              * Seconds after authorization that token is valid.
@@ -32,7 +34,7 @@ class CreateAdministratorTokensTable extends Migration
              *  28800 – non-saved authorization (8 hours)
              *  604800 – saved authorization (7 days)
              */
-            $table->integer('time_valid')->default(28800);
+            $table->integer('time_valid')->nullable()->default(28800);
 
 
             $table->foreign('administrator_id')

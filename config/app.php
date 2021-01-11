@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://cab.dobrodent.loc'),
+    'url' => env('APP_URL', 'http://cabinet.local'),
 
     'asset_url' => env('ASSET_URL', null),
 

@@ -15,7 +15,7 @@ class CreateRecordTypesTable extends Migration
     {
         Schema::create('record_types', function (Blueprint $table) {
             $table->tinyInteger('id', true, true);
-            $table->string('name', 32)->nullable(false);
+            $table->string('name', 32);
             $table->string('lang_alias', 8);
         });
     }

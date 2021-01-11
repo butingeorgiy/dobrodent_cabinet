@@ -1,0 +1,54 @@
+@extends('layouts.auth')
+
+@section('title', 'Cabinet | Вход как врач')
+
+@section('content')
+    <div class="flex flex-col pb-10 rounded-xl shadow bg-white overflow-hidden" style="width: 550px">
+        <div><div class="bg-green-light h-3 w-1/4"></div></div>
+        <div class="px-8 mt-14 flex flex-col">
+            <p class="text-5xl font-light mb-4 text-gray-700 select-none">Войти</p>
+            <form id="doctorLoginForm" class="flex flex-col" method="POST" action="{{ route('doctor-login') }}">
+                <label for="doctorPhone" class="font-light mb-1 text-gray-700 select-none">Введите Ваш логин:</label>
+                <input
+                    id="doctorPhone"
+                    type="text"
+                    name="login"
+                    autocomplete="off"
+                    value="{{ old('login') }}"
+                    class="mb-2 border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-600 tracking-widest"
+                    required>
+
+                <label for="doctorPassword" class="font-light mb-1 text-gray-700 select-none">Введите Ваш пароль:</label>
+                <input
+                    id="doctorPassword"
+                    type="password"
+                    name="password"
+                    autocomplete="off"
+                    class="mb-2 border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-600 tracking-widest"
+                    required>
+                <label class="self-start flex items-center">
+                    <input type="checkbox" name="save">
+                    <span class="font-light text-sm ml-2 select-none text-gray-700">Запомнить меня</span>
+                </label>
+                @csrf
+            </form>
+            @foreach($errors->all() as $error)
+                <span class="flex items-center mt-4 text-red-500 text-sm select-none">
+                    <svg class="w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    {{ $error }}
+                </span>
+            @endforeach
+            <hr class="mt-4 mb-6" />
+            <div class="flex mb-4">
+                <button form="doctorLoginForm" class="mr-2 px-4 py-2 border border-indigo-100 bg-indigo-100 text-white rounded-md transition duration-300 ease select-none hover:bg-indigo-200 hover:border-indigo-200 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:ring-opacity-50">
+                    Войти
+                </button>
+                <button class="px-4 py-2 border border-gray-500 text-gray-500 rounded-md transition duration-300 ease select-none hover:bg-gray-500 hover:border-gray-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">
+                    Забыли пароль?
+                </button>
+            </div>
+        </div>
+    </div>
+@endsection

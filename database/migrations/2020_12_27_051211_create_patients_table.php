@@ -16,19 +16,19 @@ class CreatePatientsTable extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('phone_code', 4)->default('7');
+            $table->string('phone_code', 4)->nullable()->default('7');
             $table->char('phone', 10);
             $table->string('email', 64)->nullable();
             $table->string('password', 64);
             $table->string('first_name', 32);
             $table->string('last_name', 32);
-            $table->string('middle_name', 32);
+            $table->string('middle_name', 32)->nullable();
 
             /**
              * Auto-generated from first_name, last_name and middle_name cells.
              */
             $table->string('full_name', 98)->storedAs(
-                DB::raw('CONCAT(`last_name`, `first_name`, `middle_name`)')
+                DB::raw('CONCAT(`last_name`, \' \', `first_name`, \' \', IF(`middle_name` IS NOT NULL, `middle_name`, \'\'))')
             );
 
             $table->timestamp('birthday')->nullable();
@@ -43,7 +43,9 @@ class CreatePatientsTable extends Migration
              * Time of last activity of patient in system.
              */
             $table->timestamp('last_activity')->nullable();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->nullable()->default(
+                DB::raw('CURRENT_TIMESTAMP()')
+            );
         });
     }
 

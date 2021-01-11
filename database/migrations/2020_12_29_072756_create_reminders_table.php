@@ -18,7 +18,9 @@ class CreateRemindersTable extends Migration
             $table->string('title', 128);
             $table->string('description', 1024)->nullable();
             $table->timestamp('assigned_at');
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->nullable()->default(
+                DB::raw('CURRENT_TIMESTAMP()')
+            );
         });
     }
 

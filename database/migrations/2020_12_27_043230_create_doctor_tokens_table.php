@@ -23,7 +23,9 @@ class CreateDoctorTokensTable extends Migration
              */
             $table->char('token', 32);
             $table->integer('doctor_id')->unsigned();
-            $table->timestamp('created_at')->nullable();
+            $table->timestamp('created_at')->nullable()->default(
+                DB::raw('CURRENT_TIMESTAMP()')
+            );
 
             /**
              * Seconds after authorization that token is valid.

@@ -30,7 +30,9 @@ class CreateVisitsTable extends Migration
             $table->bigInteger('illness_id')->unsigned();
             $table->integer('doctor_id')->unsigned();
             $table->integer('clinic_id')->unsigned();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->nullable()->default(
+                DB::raw('CURRENT_TIMESTAMP()')
+            );
             $table->timestamp('visit_time')->nullable();
 
             /**

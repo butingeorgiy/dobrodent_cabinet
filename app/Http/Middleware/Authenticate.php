@@ -2,20 +2,26 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
-class Authenticate extends Middleware
+use App\Facades\Authorization;
+use Closure;
+use Illuminate\Http\Request;
+
+class Authenticate
 {
-    /**
-     * Get the path the user should be redirected to when they are not authenticated.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string
-     */
-    protected function redirectTo($request)
+    public function handle(Request $request, Closure $next, $role)
     {
-        if (! $request->expectsJson()) {
-            return route('login');
+        if (!in_array($role, ['administrator', 'doctor', 'patient'])) {
+            abort(500, 'Undefined value of $role variable:' . $role);
+        }
+
+
+        if (Authorization::check()) {
+            Authorization::user()->invalidTokens()->delete();
+
+            return $next($request);
+        } else {
+            return redirect('/' . $role . '/login');
         }
     }
 }
