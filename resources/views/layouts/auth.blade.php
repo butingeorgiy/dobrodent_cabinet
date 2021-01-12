@@ -13,7 +13,7 @@
 <body class="bg-gray-100">
     <div class="container h-screen mx-auto">
         <div class="flex flex-col h-full">
-            <div class="absolute pt-5">
+            <div class="absolute pt-5 pl-8">
                 <img src="{{ asset('images/logo.png') }}" alt="logo" width="150px">
             </div>
             <div class="h-full flex justify-center items-center">

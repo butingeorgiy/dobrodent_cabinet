@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\AuthTokens\PatientToken;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class Patient extends Model
@@ -34,5 +35,12 @@ class Patient extends Model
     public function scopeByPhone($query, $value)
     {
         return $query->where(DB::raw('CONCAT(`phone_code`, `phone`)'), $value);
+    }
+
+    public function getBirthdayAttribute($value)
+    {
+        $cbTime = Carbon::parse($value);
+
+        return $cbTime->toDateString();
     }
 }
