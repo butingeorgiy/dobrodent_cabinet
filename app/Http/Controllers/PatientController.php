@@ -6,8 +6,10 @@ use App\Exceptions\Api\AuthorizationException;
 use App\Facades\Authorization;
 use App\Facades\SafeVar;
 use App\Models\Patient;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Throwable;
@@ -255,5 +257,100 @@ class PatientController extends Controller
         } catch (Throwable $e) {
             abort(500, $e->getMessage());
         }
+    }
+
+    public function showProfileForm()
+    {
+        $patient = Authorization::user();
+
+//        if (Storage::exists('profile_photos/patients/' . $patient->id . '.jpeg')) {
+//            $profilePhoto = Storage::get('profile_photos/patients/' . $patient->id . '.jpeg');
+//        } else {
+//            $profilePhoto = null;
+//        }
+
+        return view('patient.profile', compact('patient'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+//        dd($request->file('profile_photo')->getMimeType());
+        $this->validate(
+            $request,
+            [
+                'password' => 'bail|required',
+                'first_name' => 'bail|max:32',
+                'last_name' => 'bail|max:32',
+                'middle_name' => 'bail|max:32',
+                'email' => 'bail|max:64',
+                'gender' => 'bail|in:0,1',
+                'birthday' => 'bail|date|date_format:Y-m-d'
+            ],
+            [
+                'password.required' => 'Необходимо указать пароль',
+                'first_name.max' => 'Имя не должно быть длинее 32 символов',
+                'last_name.max' => 'Фамилия не должна быть длинее 32 символов',
+                'middle_name.max' => 'Отчество не должно быть длинее 32 символов',
+                'email.max' => 'E-mail не должен быть длинее 64 символов',
+                'gender.in' => 'Некорректное значение gender',
+                'birthday.date' => 'Некорректный тип birthday',
+                'birthday.date_format' => 'Некорректный формат даты'
+            ]
+        );
+
+        try {
+            $patient = Authorization::user();
+
+            if ($patient->password !== hash('sha256', $request->post('password'))) {
+                throw new Exception('Неверный пароль');
+            }
+
+            if ($request->post('first_name')) {
+                $patient->first_name = $request->post('first_name');
+            }
+
+            if ($request->post('last_name')) {
+                $patient->last_name = $request->post('last_name');
+            }
+
+            if ($request->post('middle_name')) {
+                $patient->middle_name = $request->post('middle_name');
+            }
+
+            if ($request->post('birthday')) {
+                $patient->birthday = $request->post('birthday');
+            }
+
+            if (in_array($request->post('gender'), ['0', '1'])) {
+                $patient->gender = $request->post('gender');
+            }
+
+            if ($request->post('email')) {
+                $patient->email = $request->post('email');
+            }
+
+            $patient->save();
+
+            if ($request->file('profile_photo')) {
+                if ($request->file('profile_photo')->getSize() > 100000) {
+                    throw new Exception('Изображение должно весить не более 100 кб');
+                }
+
+                if (!in_array($request->file('profile_photo')->getMimeType(), ['image/jpeg', 'image/jpg'])) {
+                    throw new Exception('Допустимые форматы изображения: jpeg, jpg');
+                }
+
+                $fileName = $patient->id . '.jpeg';
+
+                $request->file('profile_photo')->storeAs('profile_photos/patients', $fileName);
+            }
+
+        } catch (Throwable $e) {
+            return back()
+                ->withErrors($e->getMessage());
+        }
+
+        return back()
+            ->with(['success' => 'Изменения успешно сохранены']);
     }
 }

@@ -1,0 +1,64 @@
+import PatientProfileFormView from "./PatientProfileFormView";
+import EventHandler from "../../EventHandler";
+
+export default class PatientCabinetController extends EventHandler {
+    constructor(domElements) {
+        super();
+
+        this.domElemenst = domElements;
+
+        this.saveProfileDataChanges = this.saveProfileDataChanges.bind(this);
+
+        this.saveProfileDataChanges();
+        this.duplicateGanderValueIntoHiddenInput();
+        this.showProfilePhotoAfterChanging();
+    }
+
+    saveProfileDataChanges() {
+        if (
+            this.domElemenst.patientProfileForm &&
+            this.domElemenst.savePatientProfileBtn &&
+            this.domElemenst.confirmPatientProfileBtn &&
+            this.domElemenst.patientProfileFormErrorBox
+        ) {
+            const formView = new PatientProfileFormView(this.domElemenst.patientProfileForm);
+
+            this.addEvent(this.domElemenst.savePatientProfileBtn, 'click', _ => {
+                formView.moveToConfirmation(
+                    this.domElemenst.patientProfileFormErrorBox,
+                    this.domElemenst.savePatientProfileBtn,
+                    this.domElemenst.confirmPatientProfileBtn.parentElement.parentElement
+                );
+            });
+        }
+    }
+
+    duplicateGanderValueIntoHiddenInput() {
+        const hiddenInput = this.domElemenst.patientProfileForm.querySelector('input[name=\'gender\']');
+        const select  = this.domElemenst.patientProfileForm.querySelector('select[name=\'gender\']');
+
+        if (hiddenInput && select) {
+            this.addEvent(select, 'change', event => {
+                hiddenInput.value = event.currentTarget.value;
+            });
+        }
+    }
+
+    showProfilePhotoAfterChanging() {
+        const input = this.domElemenst.patientProfileForm.querySelector('input[name=\'profile_photo\']');
+        const label = input.parentElement;
+
+        if (input && label) {
+            this.addEvent(input, 'change', event => {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+
+                reader.onload = f => {
+                    label.style.backgroundImage = `url(${f.target.result})`;
+                }
+
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+}

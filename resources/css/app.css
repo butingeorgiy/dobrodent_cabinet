@@ -6,6 +6,7 @@
 
 body {
     @apply font-normal;
+    font-family: Montserrat, serif;
 }
 
 .shaking {

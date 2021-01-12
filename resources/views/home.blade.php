@@ -9,7 +9,6 @@
     <title>Dobro Dent Cabinet</title>
 </head>
 <body>
-    <div class="alert alert-success">Hello Laravel</div>
-    <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+    <div class="alert alert-success">Главная страница</div>
 </body>
 </html>
