@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\App;
 
 class Handler extends ExceptionHandler
 {
@@ -49,8 +50,7 @@ class Handler extends ExceptionHandler
         if ($request->is('api/*')) {
             return response([
                 'error' => true,
-                'message' => $exception->getMessage(),
-                'statusCode' => $this->prepareException($exception)->getStatusCode()
+                'message' => $exception->getMessage()
             ]);
         }
 

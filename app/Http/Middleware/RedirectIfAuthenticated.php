@@ -14,7 +14,7 @@ class RedirectIfAuthenticated
             abort(500, 'Undefined value of $role variable:' . $role);
         }
 
-        if (!Authorization::check()) {
+        if (!Authorization::check($role)) {
             return $next($request);
         } else {
             return redirect('/' . $role);

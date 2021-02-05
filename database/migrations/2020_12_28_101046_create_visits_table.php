@@ -24,12 +24,12 @@ class CreateVisitsTable extends Migration
             /**
              * Result of visit that wrote by doctor after it.
              */
-            $table->string('result', 2048);
+            $table->string('result', 2048)->nullable();
 
             $table->bigInteger('patient_id')->unsigned();
-            $table->bigInteger('illness_id')->unsigned();
-            $table->integer('doctor_id')->unsigned();
-            $table->integer('clinic_id')->unsigned();
+            $table->bigInteger('illness_id')->unsigned()->nullable();
+            $table->integer('doctor_id')->unsigned()->nullable();
+            $table->integer('clinic_id')->unsigned()->nullable();
             $table->timestamp('created_at')->nullable()->default(
                 DB::raw('CURRENT_TIMESTAMP()')
             );
@@ -38,14 +38,14 @@ class CreateVisitsTable extends Migration
             /**
              * Available values:
              *
-             *  1 – created
+             *  1 – under consideration
              *  2 – confirmed (by doctor or administrators)
              *  3 – in the process (updated automatically)
              *  4 – deferred (visit is finished, but doctor fill it later)
              *  5 – finished
              *  6 – canceled
              */
-            $table->tinyInteger('visit_status_id')->unsigned();
+            $table->tinyInteger('visit_status_id')->unsigned()->default(1);
 
 
             $table->foreign('patient_id')

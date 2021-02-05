@@ -19,7 +19,7 @@ class Authenticate
         }
 
 
-        if (Authorization::check()) {
+        if (Authorization::check($role)) {
             $user = Authorization::user();
 
             $user->invalidTokens()->delete();

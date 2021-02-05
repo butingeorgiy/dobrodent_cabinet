@@ -4,9 +4,10 @@
 namespace App\Exceptions\Api;
 
 
+use Exception;
 use Illuminate\Http\Request;
 
-class UncategorizedApiException extends \Exception
+class UncategorizedApiException extends Exception
 {
     public function render(Request $request)
     {

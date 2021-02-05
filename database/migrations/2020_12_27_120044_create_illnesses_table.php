@@ -16,7 +16,7 @@ class CreateIllnessesTable extends Migration
         Schema::create('illnesses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title', 128);
-            $table->string('description', 1024);
+            $table->string('description', 1024)->nullable();
             $table->bigInteger('patient_id')->unsigned();
             $table->tinyInteger('illness_status_id')->unsigned();
             $table->timestamp('created_at')->nullable()->default(

@@ -1,12 +1,13 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
+    important: true,
     purge: [
         './resources/**/*.blade.php',
         './resources/**/*.js'
     ],
     presets: [],
-    darkMode: false, // or 'media' or 'class'
+    darkMode: false,
     theme: {
         screens: {
             sm: '640px',
@@ -56,6 +57,7 @@ module.exports = {
             12: '3rem',
             14: '3.5rem',
             16: '4rem',
+            18: '4.5rem',
             20: '5rem',
             24: '6rem',
             28: '7rem',
@@ -71,7 +73,10 @@ module.exports = {
             72: '18rem',
             80: '20rem',
             96: '24rem',
-            '80px': '80px'
+            '80px': '80px',
+            '350px': '350px',
+            '550px': '550px',
+            '600px': '600px'
         },
         animation: {
             none: 'none',
@@ -432,6 +437,7 @@ module.exports = {
             ...theme('spacing'),
             full: '100%',
             screen: '100vh',
+            '10screens': '1000vh'
         }),
         maxWidth: (theme, {breakpoints}) => ({
             none: 'none',
@@ -455,11 +461,27 @@ module.exports = {
         }),
         minHeight: {
             0: '0px',
+            5: '1.25rem',
+            8: '2rem',
+            10: '2.5rem',
+            12: '3rem',
+            14: '3.5rem',
+            16: '4rem',
+            18: '4.5rem',
             full: '100%',
-            screen: '100vh',
+            screen: '100vh'
         },
         minWidth: {
             0: '0px',
+            5: '1.25rem',
+            8: '2rem',
+            10: '2.5rem',
+            16: '4rem',
+            12: '3rem',
+            14: '3.5rem',
+            32: '8rem',
+            36: '9rem',
+            80: '20rem',
             full: '100%',
             min: 'min-content',
             max: 'max-content',
@@ -628,7 +650,8 @@ module.exports = {
             opacity: 'opacity',
             shadow: 'box-shadow',
             transform: 'transform',
-            'max-h': 'max-height'
+            'max-h': 'max-height',
+            top: 'top'
         },
         transitionTimingFunction: {
             DEFAULT: 'cubic-bezier(0.4, 0, 0.2, 1)',
@@ -724,7 +747,7 @@ module.exports = {
         appearance: ['responsive'],
         backgroundAttachment: ['responsive'],
         backgroundClip: ['responsive'],
-        backgroundColor: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'disabled'],
+        backgroundColor: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'disabled', 'even', 'odd'],
         backgroundImage: ['responsive'],
         backgroundOpacity: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus'],
         backgroundPosition: ['responsive'],
@@ -735,7 +758,7 @@ module.exports = {
         borderOpacity: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus'],
         borderRadius: ['responsive'],
         borderStyle: ['responsive'],
-        borderWidth: ['responsive'],
+        borderWidth: ['responsive', 'last'],
         boxShadow: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus'],
         boxSizing: ['responsive'],
         clear: ['responsive'],
@@ -781,7 +804,7 @@ module.exports = {
         lineHeight: ['responsive'],
         listStylePosition: ['responsive'],
         listStyleType: ['responsive'],
-        margin: ['responsive'],
+        margin: ['responsive', 'last'],
         maxHeight: ['responsive'],
         maxWidth: ['responsive'],
         minHeight: ['responsive'],

@@ -3,9 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\Api\AuthorizationException;
+use App\Exceptions\Api\UncategorizedApiException;
 use App\Facades\Authorization;
 use App\Facades\SafeVar;
+use App\Models\Clinic;
+use App\Models\Doctor;
+use App\Models\Illness;
 use App\Models\Patient;
+use App\Models\Visit;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -16,6 +22,25 @@ use Throwable;
 
 class PatientController extends Controller
 {
+    public function index()
+    {
+        $visits = Visit::with(['status', 'doctor:id,first_name,last_name,middle_name'])
+            ->where('patient_id', Authorization::user()->id)
+            ->where('visit_date', '>=', Carbon::now()->format('Y-m-d'))
+            ->where('visit_date', '<=', Carbon::now()->addDays(7)->format('Y-m-d'))
+            ->orderByDesc('id')
+            ->get();
+
+        return view('patient.index', compact('visits'));
+    }
+
+    public function showMedicalCard()
+    {
+        $illnesses = Illness::with('status')->where('patient_id', Authorization::user()->id)->get();
+
+        return view('patient.medical-card', compact('illnesses'));
+    }
+
     public function showLoginForm(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -38,8 +63,22 @@ class PatientController extends Controller
         if ($request->get('type') === 'code') {
             try {
                 if (!$request->cookie('phone') or !$request->cookie('code')) {
+                    $code = rand(0, 9) . rand(0, 9) . rand(0, 9). rand(0, 9);
+
                     $phoneUuid = SafeVar::add($request->get('phone'));
-                    $codeUuid = SafeVar::add(rand(0, 9) . rand(0, 9) . rand(0, 9). rand(0, 9));
+                    $codeUuid = SafeVar::add($code);
+
+                    require app_path('/Services/smsCenter.php');
+
+                    $codeSendStatus = send_sms(
+                        $request->get('phone'),
+                        'Код для входа в систему: ' . $code
+                    );
+
+                    if ($codeSendStatus[1] < 0) {
+                        return back()
+                            ->withErrors(['Не удалось отправить код доступа']);
+                    }
 
                     return response()
                         ->view('patient.login')
@@ -78,8 +117,22 @@ class PatientController extends Controller
             try {
 
                 if (!$request->cookie('phone') or !$request->cookie('code')) {
+                    $code = rand(0, 9) . rand(0, 9) . rand(0, 9). rand(0, 9);
+
                     $phoneUuid = SafeVar::add($request->get('phone'));
-                    $codeUuid = SafeVar::add(rand(0, 9) . rand(0, 9) . rand(0, 9). rand(0, 9));
+                    $codeUuid = SafeVar::add($code);
+
+                    require app_path('/Services/smsCenter.php');
+
+                    $codeSendStatus = send_sms(
+                        $request->get('phone'),
+                        'Код для входа в систему: ' . $code
+                    );
+
+                    if ($codeSendStatus[1] < 0) {
+                        return back()
+                            ->withErrors(['Не удалось отправить код доступа']);
+                    }
 
                     return response()
                         ->view('patient.reg')
@@ -263,18 +316,11 @@ class PatientController extends Controller
     {
         $patient = Authorization::user();
 
-//        if (Storage::exists('profile_photos/patients/' . $patient->id . '.jpeg')) {
-//            $profilePhoto = Storage::get('profile_photos/patients/' . $patient->id . '.jpeg');
-//        } else {
-//            $profilePhoto = null;
-//        }
-
         return view('patient.profile', compact('patient'));
     }
 
     public function updateProfile(Request $request)
     {
-//        dd($request->file('profile_photo')->getMimeType());
         $this->validate(
             $request,
             [
@@ -352,5 +398,131 @@ class PatientController extends Controller
 
         return back()
             ->with(['success' => 'Изменения успешно сохранены']);
+    }
+
+    public function showDoctors(Request $request)
+    {
+        $doctors = Doctor::search($request->get('q') ?: '', 0);
+
+        return view('patient.doctors', compact('doctors'));
+    }
+
+    public function logout(Request $request)
+    {
+        $patient = Authorization::user();
+        $tokenFromCookie = decrypt($request->cookie('token'));
+
+        $patient->invalidTokens()->delete();
+
+        $availableTokens = $patient->tokens()->get();
+
+        foreach ($availableTokens as $token) {
+            $tokenFromDb = hash('sha256', Str::limit($patient->password, 10) . $_SERVER['HTTP_USER_AGENT'] . $token->token);
+            if ($tokenFromDb === $tokenFromCookie) {
+                $token->delete();
+            }
+        }
+
+        return back()
+            ->withCookie(Cookie::forget('id'))
+            ->withCookie(Cookie::forget('token'))
+            ->withCookie(Cookie::forget('entityName'));
+    }
+
+    public function showVisits(Request $request)
+    {
+        $visits = Visit::with(['doctor:id,first_name,last_name,middle_name', 'status'])->where('patient_id', Authorization::user()->id)->orderByDesc('id')->limit(15);
+
+        if ($request->get('illness')) {
+            $visits->where('illness_id', $request->get('illness'));
+        }
+
+        $visits = $visits->get();
+
+        $illnesses = Illness::where('patient_id', Authorization::user()->id)->get();
+
+        return view('patient.visits', compact('visits', 'illnesses'));
+    }
+
+    public function showCreateVisitForm()
+    {
+        $options = [
+            [
+                'id' => '',
+                'title' => 'Выбрать доктора / клинику',
+                'extra' => '',
+                'photo' => asset('images/favicon.png')
+            ]
+        ];
+
+        $clinics = Clinic::all();
+
+        foreach ($clinics as $clinic) {
+            $data = [];
+
+            $data['id'] = 'c' . $clinic->id;
+            $data['title'] = $clinic->name;
+            $data['extra'] = $clinic->address ?: 'Адрес не указан';
+            $data['photo'] = asset('images/clinic_default_profile.png');
+
+            $options[] = $data;
+        }
+
+
+        $doctors = Doctor::all();
+
+        foreach ($doctors as $doctor) {
+            $data = [];
+
+            $data['id'] = 'd' . $doctor->id;
+            $data['title'] = $doctor->full_name;
+
+            $occupation = $doctor->occupations()->get()->first();
+
+            $data['extra'] = $occupation->title ?? 'Нет специализации';
+
+            $photo = asset('images/default_profile.jpg');
+
+            if (Storage::exists('profile_photos/doctors/' . $doctor->id  . '.jpeg')) {
+                $photo = 'data:image/jpg;base64,' . base64_encode(Storage::get('profile_photos/doctors/' . $doctor->id  . '.jpeg'));
+            }
+
+            $data['photo'] = $photo;
+
+            $options[] = $data;
+        }
+
+        $options = json_encode($options);
+
+        return view('patient.create-visit-form', compact('options'));
+    }
+
+    public function showDoctor($id) {
+        $doctor = Doctor::findOrFail($id);
+
+        $doctorPhones = $doctor->phones()->select('phone')->get();
+
+        $doctorAvatar = asset('images/default_profile.jpg');
+
+        if (Storage::exists('profile_photos/doctors/' . $doctor->id . '.jpeg')) {
+            $doctorAvatar = 'data:image/jpg;base64,' . base64_encode(Storage::get('profile_photos/doctors/' . $doctor->id . '.jpeg'));
+        }
+
+        $visits = Visit::with(['doctor:id,first_name,last_name,middle_name', 'status'])
+            ->where('patient_id', Authorization::user()->id)
+            ->where('doctor_id', $id)
+            ->orderByDesc('id')
+            ->get();
+
+        $likes = $doctor->likes()->get()->count();
+
+        return view('patient.doctor', compact('doctor', 'doctorAvatar', 'visits', 'doctorPhones', 'likes'));
+    }
+
+    public function showClinics()
+    {
+        $clinics = Clinic::all();
+
+        return view('patient.clinics', compact('clinics'));
     }
 }

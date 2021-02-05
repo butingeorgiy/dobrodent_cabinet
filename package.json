@@ -29,14 +29,15 @@
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.15.2",
         "sass-loader": "^7.1.0",
+        "source-map-loader": "^1.0.0",
         "style-loader": "^2.0.0",
         "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.1"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^24.0.0",
         "inputmask": "^5.0.5",
-        "jquery": "^3.5.1",
-        "jquery-mask-plugin": "^1.14.16"
+        "tom-select": "^1.1.0"
     }
 }

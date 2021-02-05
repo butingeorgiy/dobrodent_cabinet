@@ -3,14 +3,15 @@
 @section('title', 'Cabinet | Кабинет пользователя')
 
 @section('content')
-    <div class="mx-auto max-w-xl bg-white shadow py-5">
-        <p class="px-6 text-2xl text-gray-500 select-none">Личные данные</p>
-        <hr class="my-3" />
-        <form action="{{ route('patient-profile-update') }}" method="POST" enctype="multipart/form-data" id="patientProfileForm" class="flex flex-col px-6 pt-4">
-            <label class="mx-auto mb-8 rounded-full border-4 border-gray-300 w-40 h-40 bg-no-repeat bg-center bg-cover cursor-pointer"
+    <div class="mx-auto sm:max-w-xl bg-white shadow py-5">
+        <p class="px-4 text-xl sm:text-2xl text-gray-400 select-none">Личные данные</p>
+        <hr class="my-4" />
+        <form action="{{ route('patient-profile-update') }}" method="POST" enctype="multipart/form-data" id="patientProfileForm" class="flex flex-col px-4 pt-4">
+            <label class="mx-auto mb-2 rounded-full border-4 border-gray-300 w-32 h-32 sm:w-40 sm:h-40 bg-no-repeat bg-center bg-cover cursor-pointer"
                  style="background-image: {{ $profilePhoto !== null ? 'url(\'data:image/jpg;base64,' . base64_encode($profilePhoto) . '\'' : 'url(' . asset('images/default_profile.jpg') . ')' }}">
                 <input type="file" name="profile_photo" hidden>
             </label>
+            <i class="text-xs mx-auto mb-6 text-gray-400 select-none">Ред. фотографию</i>
             <label class="flex flex-col mb-4">
                 <span class="mb-1 font-medium text-gray-700 select-none">Имя</span>
                 <input class="border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-500" type="text" value="{{ $patient->first_name }}" name="first_name" placeholder="Введите ваше имя" required>
@@ -29,7 +30,7 @@
             </label>
             <label class="flex flex-col mb-4">
                 <span class="mb-1 font-medium text-gray-700 select-none">Пол</span>
-                <select class="border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-500" name="gender" required>
+                <select class="border border-gray-300 bg-white rounded-md px-3 py-2 outline-none text-gray-500" name="gender" required>
                     <option>Укажите свой пол</option>
                     <option value="0" {{ $patient->gender === '0' ? 'selected' : '' }}>Мужской</option>
                     <option value="1" {{ $patient->gender === '1' ? 'selected' : '' }}>Женский</option>
@@ -38,7 +39,18 @@
             </label>
             <label class="flex flex-col mb-4">
                 <span class="mb-1 font-medium text-gray-700 select-none">Дата рождения</span>
-                <input class="border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-500" type="date" value="{{ $patient->birthday }}" name="birthday" required>
+                <span class="flex self-start bg-white px-3 py-2 text-gray-500 rounded-md border border-gray-300">
+                    <svg class="w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M8 7V3m8 4V3m-9 8h10M5
+                                      21h14a2 2 0 002-2V7a2 2
+                                      0 00-2-2H5a2 2 0 00-2 2v12a2
+                                      2 0 002 2z" />
+                    </svg>
+                    <input class="text-center bg-white w-28 focus:outline-none" type="date" name="birthday" value="{{ $patient->birthday }}" required>
+                </span>
             </label>
             <span class="flex items-center text-red-500 text-sm select-none error-message {{ !$errors->any() ? 'hidden' : '' }}">
                 <svg class="w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,16 +87,16 @@
                 <span class="mb-1 text-gray-600">Введите пароль чтобы сохранить изменения</span>
                 <input class="mb-3 border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-500" type="password" name="password" required>
                 <span class="flex">
-                    <button id="confirmPatientProfileBtn" class="mr-2 px-4 py-2 border border-green-light bg-green-light text-white rounded-md transition duration-300 ease select-none hover:bg-green-light hover:border-green-light focus:outline-none focus:ring-4 focus:ring-green-light focus:ring-opacity-50">
+                    <button id="confirmPatientProfileBtn" class="mr-2 px-4 py-2 border border-green-light bg-green-light text-sm sm:text-base text-white rounded-md transition duration-300 ease select-none hover:bg-green-light hover:border-green-light focus:outline-none focus:ring-4 focus:ring-green-light focus:ring-opacity-50">
                         Сохранить
                     </button>
-                    <a href="" class="px-4 py-2 border border-gray-500 text-gray-500 rounded-md transition duration-300 ease select-none hover:bg-gray-500 hover:border-gray-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">
+                    <a href="" class="px-4 py-2 border border-gray-500 text-sm sm:text-base text-gray-500 rounded-md transition duration-300 ease select-none hover:bg-gray-500 hover:border-gray-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">
                         Отмена
                     </a>
                 </span>
             </label>
             @csrf
-            <button id="savePatientProfileBtn" type="button" class="mt-4 px-4 py-2 border border-indigo-100 bg-indigo-100 text-white rounded-md transition duration-300 ease select-none hover:bg-indigo-200 hover:border-indigo-200 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:ring-opacity-50">
+            <button id="savePatientProfileBtn" type="button" class="mt-4 px-4 py-2 border border-indigo-100 bg-indigo-100 text-sm sm:text-base text-white rounded-md transition duration-300 ease select-none hover:bg-indigo-200 hover:border-indigo-200 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:ring-opacity-50">
                 Сохранить изменения
             </button>
         </form>

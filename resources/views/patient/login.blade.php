@@ -4,9 +4,9 @@
 
 @section('content')
 
-    <div id="patientLoginForm" class="flex flex-col pb-10 rounded-xl shadow bg-white overflow-hidden" style="width: 550px">
+    <div id="patientLoginForm" class="flex flex-col pb-10 mx-3 w-full sm:w-550px rounded-xl shadow bg-white overflow-hidden">
         <div><div class="bg-green-light h-3 {{ request()->step === '2' ? 'w-3/4' : 'w-1/4' }}"></div></div>
-        <div class="px-8 mt-14 flex flex-col">
+        <div class="px-4 sm:px-8 mt-14 flex flex-col">
             <p class="text-5xl font-light mb-4 text-gray-700 select-none">Войти</p>
             @if(request()->step === '1' or request()->step === null)
                 <label for="patientLoginPhone" class="font-light mb-2 text-gray-700 select-none">Введите номер телефона:</label>
@@ -39,17 +39,17 @@
                 </label>
                 <hr class="my-4" />
                 <p class="font-light mb-2 text-gray-700 select-none">Войти с помощью:</p>
-                <div class="flex mb-4">
-                    <button id="authByPasswordBtn" class="mr-2 px-4 py-2 border border-indigo-100 bg-indigo-100 text-white rounded-md transition duration-300 ease select-none hover:bg-indigo-200 hover:border-indigo-200 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:ring-opacity-50 disabled:opacity-50 disabled:bg-indigo-100 disabled:border-indigo-100 disabled:cursor-not-allowed" disabled>
+                <div class="flex flex-col sm:flex-row mb-4">
+                    <button id="authByPasswordBtn" class="mb-2 sm:mb-0 sm:mr-2 px-4 py-2 border border-indigo-100 bg-indigo-100 text-white rounded-md transition duration-300 ease select-none hover:bg-indigo-200 hover:border-indigo-200 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:ring-opacity-50 disabled:opacity-50 disabled:bg-indigo-100 disabled:border-indigo-100 disabled:cursor-not-allowed" disabled>
                         Пароль
                     </button>
                     <button id="authBySmsCodeBtn" class="px-4 py-2 border border-indigo-100 text-indigo-100 rounded-md transition duration-300 ease select-none hover:bg-indigo-100 hover:border-indigo-100 hover:text-white focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:ring-opacity-50 disabled:opacity-50 disabled:border-indigo-100 disabled:text-indigo-100 disabled:bg-white disabled:cursor-not-allowed" disabled>
                         SMS-подтверждение
                     </button>
                 </div>
-                <button class="self-start px-4 py-2 border border-gray-500 text-gray-500 rounded-md transition duration-300 ease select-none hover:bg-gray-500 hover:border-gray-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">
-                    Забыли пароль?
-                </button>
+{{--                <button class="self-start px-4 py-2 border border-gray-500 text-gray-500 rounded-md transition duration-300 ease select-none hover:bg-gray-500 hover:border-gray-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">--}}
+{{--                    Забыли пароль?--}}
+{{--                </button>--}}
                 <span class="mx-auto mt-6 text-sm text-gray-700 font-light select-none">Нет аккаунта? <a href="{{ route('patient-reg-form') }}" class="text-blue-600 hover:underline">Загеристрируйтесь!</a></span>
             @elseif(request()->step === '2' and request()->type === 'code')
                 <form id="patientLoginSMSCodeForm" class="flex flex-col" action="{{ route('patient-login-by-code') }}" method="POST">
@@ -78,9 +78,9 @@
                     <a href="{{ route('patient-login-form') }}" class="mr-2 px-4 py-2 border border-gray-500 bg-gray-500 text-white rounded-md transition duration-300 ease select-none hover:bg-gray-600 hover:border-gray-600 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">
                         Назад
                     </a>
-                    <button class="px-4 py-2 border border-gray-500 text-gray-500 rounded-md transition duration-300 ease select-none hover:bg-gray-500 hover:border-gray-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">
-                        Отправить SMS-код заново
-                    </button>
+{{--                    <button class="px-4 py-2 border border-gray-500 text-gray-500 rounded-md transition duration-300 ease select-none hover:bg-gray-500 hover:border-gray-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">--}}
+{{--                        Отправить SMS-код заново--}}
+{{--                    </button>--}}
                 </div>
             @elseif(request()->step === '2' and request()->type === 'password')
                 <form id="patientLoginByPasswordFrom" class="flex flex-col" action="{{ route('patient-login-by-password') }}" method="POST">

@@ -27,7 +27,7 @@ class AuthorizationException extends Exception
      */
     public function render(Request $request)
     {
-        if ($request->route('api/*') or !App::environment('local')) {
+        if ($request->is('api/*')) {
             $error = ['error' => true, 'message' => $this->getMessage()];
 
             return response($error);

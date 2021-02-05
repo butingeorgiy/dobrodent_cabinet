@@ -18,15 +18,16 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader",
-                }
+                use: [
+                    {loader: "babel-loader"},
+                    "source-map-loader"
+                ]
             },
             {
                 test: /\.css$/,
                 use: [
                     "style-loader",
-                    { loader: "css-loader", options: { importLoaders: 1 } },
+                    {loader: "css-loader", options: {importLoaders: 1}},
                     "postcss-loader",
                 ],
             }

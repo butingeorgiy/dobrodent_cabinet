@@ -11,28 +11,34 @@
     <title>@yield('title')</title>
 </head>
 <body class="bg-gray-100">
-    <div class="sticky top-0">
+    <div class="sticky top-0 z-40">
         <header class="bg-white">
-            <div class="container flex items-center mx-auto px-8">
+            <div class="container flex items-center mx-auto px-4 sm:px-8">
                 <a class="mr-auto py-4" href="{{ route('patient-index') }}">
-                    <img src="{{ asset('images/logo.png') }}" alt="logo" width="150px">
+                    <img class="h-7 sm:h-8" src="{{ asset('images/logo.png') }}" alt="logo">
                 </a>
                 <div class="flex items-center py-4 relative">
-                    <div class="flex flex-col text-right mr-5 select-none">
-                        <p class="font-bold text-gray-500">+ 7 (747) 505 1903</p>
+                    <div class="hidden sm:flex flex-col text-right mr-5 select-none">
+                        <p class="font-bold text-gray-500">
+                            @php
+                                $patient = App\Facades\Authorization::user();
+
+                                echo '+ ' . $patient->phone_code . ' ' . preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2 $3', $patient->phone);
+                            @endphp
+                        </p>
                         <span class="open-extra-dropdown-menu-btn flex items-center justify-end text-sm font-medium text-gray-400 cursor-pointer hover:opacity-70">
-                        <svg class="mr-1 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M13 9l3 3m0 0l-3
-                                  3m3-3H8m13 0a9 9 0
-                                  11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Мой аккаунт
-                    </span>
+                            <svg class="mr-1 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      stroke-width="2"
+                                      d="M13 9l3 3m0 0l-3
+                                      3m3-3H8m13 0a9 9 0
+                                      11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Мой аккаунт
+                        </span>
                     </div>
-                    <div class="rounded-full bg-contain bg-no-repeat bg-center w-12 h-12 bg-gray-200"
+                    <div class="open-extra-dropdown-menu-btn w-12 h-12 cursor-pointer rounded-full bg-contain bg-no-repeat bg-center border-2 border-gray-300 bg-gray-200"
                          style="background-image: {{ $profilePhoto !== null ? 'url(\'data:image/jpg;base64,' . base64_encode($profilePhoto) . '\'' : 'url(' . asset('images/default_profile.jpg') . ')' }}"></div>
                     <div class="extra-dropdown-menu flex flex-col z-10 hidden absolute top-full right-0 bg-white shadow-2xl border-t border-gray-200">
                         <a class="flex px-4 py-2 hover:bg-gray-100" href="{{ route('patient-profile') }}">
@@ -42,7 +48,7 @@
                             </svg>
                             <p class="whitespace-nowrap">Перейти в профиль</p>
                         </a>
-                        <a class="flex px-4 py-2 text-red-500 hover:bg-gray-100" href="#">
+                        <a class="flex px-4 py-2 text-red-500 hover:bg-gray-100" href="{{ route('patient-logout') }}">
                             <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
@@ -54,7 +60,7 @@
         </header>
 
         <section id="openDropdownMenuBtn" class="xl:hidden bg-green-light py-2 cursor-pointer">
-            <div class="container mx-auto flex items-center px-8">
+            <div class="container mx-auto flex items-center px-4 sm:px-8">
                 <p class="mr-auto text-white select-none">Меню</p>
                 <svg class="w-7 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round"
@@ -65,8 +71,8 @@
             </div>
         </section>
 
-        <nav class="hidden xl:block bg-green-light xl:pt-4 xl:pb-4 transition-max-h duration-500 ease-linear max-h-0 xl:max-h-full xl:h-auto overflow-hidden">
-            <div class="container flex flex-col xl:flex-row xl:justify-between mx-auto px-8 xl:px-16 select-none">
+        <nav class="hidden z-50 xl:block bg-green-light xl:pt-4 xl:pb-4 transition-max-h duration-500 ease-linear max-h-0 xl:max-h-full xl:h-auto overflow-hidden">
+            <div class="container flex flex-col xl:flex-row xl:justify-between mx-auto px-4 sm:px-8 xl:px-24 select-none">
                 <a class="flex mb-2 xl:mb-0 items-center text-white {{ !request()->is('patient') ? 'opacity-60' : '' }} hover:opacity-100" href="{{ route('patient-index') }}">
                     <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
@@ -82,7 +88,7 @@
                     Мой кабинет
                 </a>
 
-                <a class="flex mb-2 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" href="#">
+                <a class="flex mb-2 xl:mb-0 items-center text-white {{ !request()->is('patient/medical-card') ? 'opacity-60' : '' }} hover:opacity-100" href="{{ route('patient-medical-card') }}">
                     <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
@@ -99,20 +105,20 @@
                     Мед. карта
                 </a>
 
-                <a class="flex mb-2 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" href="#">
-                    <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M8 7V3m8 4V3m-9
-                          8h10M5 21h14a2 2 0
-                          002-2V7a2 2 0 00-2-2H5a2
-                          2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    События
-                </a>
+{{--                <a class="flex mb-2 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" href="#">--}}
+{{--                    <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">--}}
+{{--                        <path stroke-linecap="round"--}}
+{{--                              stroke-linejoin="round"--}}
+{{--                              stroke-width="2"--}}
+{{--                              d="M8 7V3m8 4V3m-9--}}
+{{--                          8h10M5 21h14a2 2 0--}}
+{{--                          002-2V7a2 2 0 00-2-2H5a2--}}
+{{--                          2 0 00-2 2v12a2 2 0 002 2z" />--}}
+{{--                    </svg>--}}
+{{--                    События--}}
+{{--                </a>--}}
 
-                <a class="flex mb-2 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" href="#">
+                <a class="flex mb-2 xl:mb-0 items-center text-white {{ !request()->is(['patient/visits', 'patient/visits/*']) ? 'opacity-60' : '' }} hover:opacity-100" href="{{ route('patient-visits') }}">
                     <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
@@ -126,7 +132,7 @@
                     Визиты
                 </a>
 
-                <a class="flex mb-2 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" href="#">
+                <a class="flex mb-2 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" target="_blank" href="https://dobrodent.kz/price">
                     <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
@@ -143,7 +149,7 @@
                     Прайс лист
                 </a>
 
-                <a class="flex mb-2 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" href="#">
+                <a class="flex mb-2 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" target="_blank" href="https://dobrodent.kz/blog">
                     <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
@@ -156,7 +162,7 @@
                     База знаний
                 </a>
 
-                <a class="flex mb-2 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" href="#">
+                <a class="flex mb-2 xl:mb-0 items-center text-white {{ !request()->is('patient/clinics') ? 'opacity-60' : '' }} hover:opacity-100" href="{{ route('patient-clinics') }}">
                     <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
@@ -172,7 +178,7 @@
                     Клиники
                 </a>
 
-                <a class="flex mb-2 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" href="#">
+                <a class="flex mb-2 xl:mb-0 items-center text-white {{ !request()->is(['patient/doctors', 'patient/doctors/*']) ? 'opacity-60' : '' }} hover:opacity-100" href="{{ route('patient-doctors') }}">
                     <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
@@ -184,25 +190,25 @@
                     Врачи
                 </a>
 
-                <a class="flex mb-4 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" href="#">
-                    <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M7 4v16M17 4v16M3
-                          8h4m10 0h4M3 12h18M3
-                          16h4m10 0h4M4 20h16a1
-                          1 0 001-1V5a1 1 0 00-1-1H4a1
-                          1 0 00-1 1v14a1 1 0 001 1z" />
-                    </svg>
-                    Медиафайлы
-                </a>
+{{--                <a class="flex mb-4 xl:mb-0 items-center text-white opacity-60 hover:opacity-100" href="#">--}}
+{{--                    <svg class="mr-1 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">--}}
+{{--                        <path stroke-linecap="round"--}}
+{{--                              stroke-linejoin="round"--}}
+{{--                              stroke-width="2"--}}
+{{--                              d="M7 4v16M17 4v16M3--}}
+{{--                          8h4m10 0h4M3 12h18M3--}}
+{{--                          16h4m10 0h4M4 20h16a1--}}
+{{--                          1 0 001-1V5a1 1 0 00-1-1H4a1--}}
+{{--                          1 0 00-1 1v14a1 1 0 001 1z" />--}}
+{{--                    </svg>--}}
+{{--                    Медиафайлы--}}
+{{--                </a>--}}
             </div>
         </nav>
     </div>
 
-    <section class="my-5">
-        <div class="container mx-auto px-8">@yield('content')</div>
+    <section class="mt-5 mb-10">
+        <div class="container mx-auto sm:px-8">@yield('content')</div>
     </section>
 </body>
 </html>

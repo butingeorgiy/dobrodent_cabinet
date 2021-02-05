@@ -10,10 +10,11 @@ export default class DropdownMenuView {
         if (this._isShown === false) {
             this.menuNode.classList.remove('hidden');
             setTimeout(_ => {
-                this.menuNode.classList.add('max-h-screen')
+                this.menuNode.classList.add('max-h-screen');
             }, 0);
         } else {
             this.menuNode.classList.remove('max-h-screen');
+            this.menuNode.classList.add('overflow-hidden');
             setTimeout(_ => {
                 this.menuNode.classList.add('hidden');
             }, 500);

@@ -98,7 +98,7 @@ class AuthorizationService
         }
     }
 
-    public function check()
+    public function check($role = null)
     {
         $request = request();
 
@@ -112,6 +112,16 @@ class AuthorizationService
             $user = $entityName::find($id);
 
             if (!$user) return false;
+
+            if ($role === 'administrator') {
+                if (get_class($user) !== Administrator::class) return false;
+            } else if ($role === 'doctor') {
+                if (get_class($user) !== Doctor::class) return false;
+            } else if ($role === 'patient') {
+                if (get_class($user) !== Patient::class) return false;
+            } else {
+                return false;
+            }
 
             $availableUserTokens = $user->tokens()
                 ->where(
