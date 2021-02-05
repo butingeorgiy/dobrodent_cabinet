@@ -7,11 +7,10 @@
     "license": "ISC",
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "node_modules/webpack/bin/webpack.js --mode=development",
-        "watch": "npm run development --watch --progress",
-        "prod": "npm run production",
-        "production": "node_modules/webpack/bin/webpack.js --mode=production"
+        "prod:css": "NODE_ENV=production npx tailwindcss-cli@latest build ./resources/css/app.css -o ./public/css/app.css",
+        "dev:css": "npx tailwindcss-cli@latest build ./resources/css/app.css -o ./public/css/app.css",
+        "prod": "webpack --mode=production",
+        "dev": "webpack --mode=development --watch"
     },
     "devDependencies": {
         "@tailwindcss/postcss7-compat": "^2.0.2",
