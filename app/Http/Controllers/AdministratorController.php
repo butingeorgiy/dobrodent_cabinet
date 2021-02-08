@@ -17,6 +17,23 @@ use Throwable;
 
 class AdministratorController extends Controller
 {
+    public function index(Request $request)
+    {
+        $global = [];
+
+        if ($request->has('q')) {
+            if (!$request->get('q')) {
+                $global = [];
+            } else {
+                $global['doctors'] = Doctor::search($request->get('q'), 0, true);
+                $global['visits'] = Visit::search($request->get('q'), 0, true);
+                $global['patients'] = Patient::searchByAdministrator($request->get('q'), 0);
+            }
+        }
+
+        return view('administrator.index', compact('global'));
+    }
+
     public function login(Request $request)
     {
         $this->validate(

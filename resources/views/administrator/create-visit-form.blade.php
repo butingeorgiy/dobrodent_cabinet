@@ -17,8 +17,8 @@
             </div>
             <div class="w-full lg:w-1/3 pl-4 lg:pl-0 pr-4">
                 <p class="mb-1 mt-2 lg:mt-0">Дата, удобная для визита:</p>
-                <label class="flex bg-white px-3 py-1 text-gray-700 rounded-md border border-gray-400">
-                    <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <label class="flex items-center bg-white px-3 py-1 text-gray-700 rounded-md border border-gray-400">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
@@ -27,19 +27,19 @@
                                   0 00-2-2H5a2 2 0 00-2 2v12a2
                                   2 0 002 2z" />
                     </svg>
-                    <input class="text-sm sm:text-base focus:outline-none disabled:bg-white" type="date" name="visit_date">
+                    <input class="text-sm sm:text-base placeholder-gray-700 focus:outline-none disabled:bg-white" type="date" name="visit_date" placeholder="дд.мм.гггг">
                 </label>
 
                 <p class="mt-3 mb-1">Предпочитаемое время:</p>
-                <label class="flex bg-white px-3 py-1 text-gray-700 rounded-md border border-gray-400">
-                    <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <label class="flex items-center bg-white px-3 py-1 text-gray-700 rounded-md border border-gray-400">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
                               d="M12 8v4l3 3m6-3a9 9 0
                               11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <input class="text-sm sm:text-base focus:outline-none disabled:bg-white" type="time" name="visit_time">
+                    <input class="text-sm sm:text-base placeholder-gray-700 focus:outline-none disabled:bg-white" type="time" name="visit_time" placeholder="--:--">
                 </label>
             </div>
         </div>

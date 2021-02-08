@@ -15,3 +15,4 @@ import './modules/LikeDoctorModule/index';
 import './modules/DoctorNoteModule/index';
 import './modules/CreateDoctorReview/index';
 import './modules/RecentSearchModule/index';
+import './modules/FullSearchModule/index';

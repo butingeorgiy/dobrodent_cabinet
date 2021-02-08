@@ -5,11 +5,13 @@ document.addEventListener('DOMContentLoaded', _ => {
     const savePatientProfileBtn = document.querySelector('#savePatientProfileBtn');
     const confirmPatientProfileBtn = document.querySelector('#confirmPatientProfileBtn');
     const patientProfileFormErrorBox = document.querySelector('#patientProfileForm .error-message');
+    const patientBirthdayInput = document.querySelector('#patientProfileForm input[name=\'birthday\']');
 
     new PatientCabinetController({
         patientProfileForm,
         savePatientProfileBtn,
         confirmPatientProfileBtn,
-        patientProfileFormErrorBox
+        patientProfileFormErrorBox,
+        patientBirthdayInput
     });
 });

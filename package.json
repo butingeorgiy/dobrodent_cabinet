@@ -1,6 +1,6 @@
 {
     "name": "dobro-dent-cabinet",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "System for patients, doctors and administrators of Dobro Dent clinics",
     "main": "index.js",
     "author": "Butin Georgiy",

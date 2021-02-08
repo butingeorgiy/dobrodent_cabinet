@@ -20,7 +20,7 @@ class VisitController extends Controller
 {
     public function showByPatient($id)
     {
-        $visit = Visit::findOrFail($id);
+        $visit = Visit::where('patient_id', Authorization::user()->id)->findOrFail($id);
 
         $visit->load(['doctor:id,first_name,last_name,middle_name', 'illness:id,title']);
 

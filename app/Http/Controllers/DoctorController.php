@@ -19,7 +19,7 @@ use Throwable;
 
 class DoctorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $visits = Visit::with(['status', 'patient:id,first_name,last_name,middle_name'])
             ->where('doctor_id', Authorization::user()->id)
@@ -27,7 +27,18 @@ class DoctorController extends Controller
             ->orderByDesc('id')
             ->get();
 
-        return view('doctor.index', compact('visits'));
+        $global = [];
+
+        if ($request->has('q')) {
+            if (!$request->get('q')) {
+                $global = [];
+            } else {
+                $global['visits'] = Visit::search($request->get('q'), 0, true);
+                $global['patients'] = Patient::searchByDoctor($request->get('q'), 0);
+            }
+        }
+
+        return view('doctor.index', compact('visits', 'global'));
     }
 
     public function login(Request $request)

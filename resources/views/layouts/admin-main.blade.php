@@ -41,12 +41,12 @@
                     </span>
                 </div>
                 <div
-                    class="open-extra-dropdown-menu-btn rounded-full bg-contain bg-no-repeat bg-center w-12 h-12 bg-gray-200"
+                    class="open-extra-dropdown-menu-btn rounded-full border-2 border-gray-300 bg-contain bg-no-repeat bg-center w-12 h-12 bg-gray-200"
                     style="background-image: {{ $profilePhoto !== null ? 'url(\'data:image/jpg;base64,' . base64_encode($profilePhoto) . '\'' : 'url(' . asset('images/default_profile.jpg') . ')' }}"></div>
                 <div
                     class="extra-dropdown-menu flex flex-col z-10 hidden absolute top-full right-0 bg-white shadow-2xl border-t border-gray-200">
                     <a class="flex px-4 py-2 text-red-500 hover:bg-gray-100" href="{{ route('administrator-logout') }}">
-                        <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                              stroke="currentColor">
                             <path stroke-linecap="round"
                                   stroke-linejoin="round"

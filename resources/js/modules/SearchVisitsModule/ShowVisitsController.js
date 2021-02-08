@@ -2,6 +2,7 @@ import EventHandler from "../../EventHandler";
 import FiltersContainerView from "./FiltersContainerView";
 import VisitsListView from "./VisitsListView";
 import TomSelect from 'tom-select/dist/js/tom-select.complete.min';
+import Inputmask from 'inputmask';
 
 export default class ShowVisitsController extends EventHandler {
     constructor(domElements, model) {
@@ -50,6 +51,22 @@ export default class ShowVisitsController extends EventHandler {
                 domElements.visitsContainer,
                 domElements.visitsAmountIndicator
             );
+        }
+
+        if (domElements.dateStartInput && domElements.dateEndInput) {
+            this.initDateInputs();
+        }
+    }
+
+    initDateInputs() {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'date');
+
+        if (input.type !== 'date') {
+            Inputmask({
+                mask: '(0|1|2|3)9.(0|1)9.9999',
+                placeholder: 'дд.мм.гггг'
+            }).mask([this.domElements.dateStartInput, this.domElements.dateEndInput]);
         }
     }
 
@@ -135,7 +152,7 @@ export default class ShowVisitsController extends EventHandler {
     }
 
     showMore() {
-        document.addEventListener('wheel', _ => {
+        const showMoreListener = _ => {
             if (
                 ((this.domElements.showMoreVisitsBtn.getBoundingClientRect().top - document.documentElement.clientHeight) < 0)
                 && this.searchingMore === false
@@ -144,7 +161,11 @@ export default class ShowVisitsController extends EventHandler {
                 this.searchingMore = true;
                 this.showVisits(false);
             }
-        });
+        };
+
+        document.addEventListener('mousewheel', showMoreListener);
+        document.addEventListener('touchmove', showMoreListener);
+        document.addEventListener('click', showMoreListener);
     }
 
     showVisits(needToClear = false) {
@@ -174,14 +195,13 @@ export default class ShowVisitsController extends EventHandler {
         this.addEvent(this.domElements.acceptVisitsFiltersBtn, 'click', _ => {
             this.visitsListView.reset(this.allowToShowMore, this.forbidToShowMore);
             this.filters = this.getFilters();
-            // this.visitsListView.clear();
             this.showVisits(true);
         });
     }
 
     getFilters() {
-        let dateStartInput = this.domElements.visitsFilters.querySelector('input[name=\'date_start\']'),
-            dateEndInput = this.domElements.visitsFilters.querySelector('input[name=\'date_end\']'),
+        let dateStartInput = this.domElements.dateStartInput,
+            dateEndInput = this.domElements.dateEndInput,
             filters = {};
 
         if (this.statusesSelect) {
@@ -201,14 +221,30 @@ export default class ShowVisitsController extends EventHandler {
         }
 
         if (dateStartInput) {
-            if (dateStartInput.value !== '') {
-                filters.date_start = dateStartInput.value;
+            if (dateStartInput.type === 'date') {
+                if (dateStartInput.value !== '') {
+                    filters.date_start = dateStartInput.value;
+                    console.log(123);
+                }
+            } else {
+                if (/\d\d\.\d\d.\d\d\d\d/g.test(dateStartInput.value)) {
+                    const dateStart = dateStartInput.value.split('.');
+                    filters.date_start = dateStart[2] + '-' + dateStart[1] + '-' + dateStart[0];
+                }
             }
         }
 
         if (dateEndInput) {
-            if (dateEndInput.value) {
-                filters.date_end = dateEndInput.value;
+            if (dateEndInput.type === 'date') {
+                if (dateEndInput.value !== '') {
+                    console.log(123);
+                    filters.date_end = dateEndInput.value;
+                }
+            } else {
+                if (/\d\d\.\d\d.\d\d\d\d/g.test(dateEndInput.value)) {
+                    const dateEnd = dateEndInput.value.split('.');
+                    filters.date_end = dateEnd[2] + '-' + dateEnd[1] + '-' + dateEnd[0];
+                }
             }
         }
 

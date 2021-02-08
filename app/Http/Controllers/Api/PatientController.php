@@ -7,6 +7,7 @@ use App\Facades\Authorization;
 use App\Models\Doctor;
 use App\Models\DoctorReview;
 use App\Models\Patient;
+use App\Models\Visit;
 use Exception;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -181,5 +182,21 @@ class PatientController extends Controller
 
         return response()
             ->json(['success' => 'Ваш отзыв успешно сохранён']);
+    }
+
+    public function generalSearch(Request $request)
+    {
+        $value = $request->get('q');
+
+        if (!$value) {
+            return [];
+        }
+
+        $output = [];
+
+        $output['doctors'] = Doctor::search($value, 0, true);
+        $output['visits'] = Visit::search($value, 0, true);
+
+        return $output;
     }
 }
