@@ -6,7 +6,7 @@
     <div class="w-full bg-white shadow-md p-4 mb-5">
         <div class="flex items-center mb-2 rounded-md border border-gray-300 px-3 py-2 sm:px-4 sm:py-3">
             <div class="flex patients-search-loader">
-                <svg class="non-loader w-5 sm:w-6 mr-2 sm:mr-5 text-green-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                <svg class="non-loader w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-5 text-green-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor">
                     <path stroke-linecap="round"
                           stroke-linejoin="round"
@@ -14,7 +14,7 @@
                           d="M21 21l-6-6m2-5a7
                       7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
-                <svg class="loader hidden animate-spin w-5 sm:w-6 mr-2 sm:mr-5 text-green-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg class="loader hidden animate-spin w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-5 text-green-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25"
                             cx="12"
                             cy="12"

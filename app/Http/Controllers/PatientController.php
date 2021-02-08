@@ -22,7 +22,7 @@ use Throwable;
 
 class PatientController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $visits = Visit::with(['status', 'doctor:id,first_name,last_name,middle_name'])
             ->where('patient_id', Authorization::user()->id)
@@ -31,7 +31,18 @@ class PatientController extends Controller
             ->orderByDesc('id')
             ->get();
 
-        return view('patient.index', compact('visits'));
+        $global = [];
+
+        if ($request->has('q')) {
+            if (!$request->get('q')) {
+                $global = [];
+            } else {
+                $global['doctors'] = Doctor::search($request->get('q'), 0, true);
+                $global['visits'] = Visit::search($request->get('q'), 0, true);
+            }
+        }
+
+        return view('patient.index', compact('visits', 'global'));
     }
 
     public function showMedicalCard()
@@ -431,7 +442,9 @@ class PatientController extends Controller
 
     public function showVisits(Request $request)
     {
-        $visits = Visit::with(['doctor:id,first_name,last_name,middle_name', 'status'])->where('patient_id', Authorization::user()->id)->orderByDesc('id')->limit(15);
+        $user = Authorization::user();
+
+        $visits = Visit::with(['doctor:id,first_name,last_name,middle_name', 'status'])->where('patient_id', $user->id)->orderByDesc('id')->limit(15);
 
         if ($request->get('illness')) {
             $visits->where('illness_id', $request->get('illness'));
@@ -439,7 +452,7 @@ class PatientController extends Controller
 
         $visits = $visits->get();
 
-        $illnesses = Illness::where('patient_id', Authorization::user()->id)->get();
+        $illnesses = Illness::where('patient_id', $user->id)->get();
 
         return view('patient.visits', compact('visits', 'illnesses'));
     }

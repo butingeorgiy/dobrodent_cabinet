@@ -60,8 +60,8 @@
 
                 <span class="mt-2 mb-2">По дате:</span>
                 <div class="flex flex-col sm:flex-row">
-                    <label class="flex bg-white px-3 py-1 text-gray-700 rounded-md border border-gray-300">
-                        <svg class="w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <label class="flex items-center bg-white px-3 py-1 text-gray-700 rounded-md border border-gray-300">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round"
                                   stroke-linejoin="round"
                                   stroke-width="2"
@@ -70,11 +70,11 @@
                                   0 00-2-2H5a2 2 0 00-2 2v12a2
                                   2 0 002 2z" />
                         </svg>
-                        <input class="text-center bg-white w-28 focus:outline-none" type="date" name="date_start">
+                        <input class="text-center bg-white w-28 placeholder-gray-700 focus:outline-none" type="date" name="date_start" placeholder="дд.мм.гггг">
                     </label>
                     <span class="mx-3 self-center"> – </span>
-                    <label class="flex bg-white px-3 py-1 text-gray-700 rounded-md border border-gray-300">
-                        <svg class="w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <label class="flex items-center bg-white px-3 py-1 text-gray-700 rounded-md border border-gray-300">
+                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round"
                                   stroke-linejoin="round"
                                   stroke-width="2"
@@ -83,7 +83,7 @@
                                   0 00-2-2H5a2 2 0 00-2 2v12a2
                                   2 0 002 2z" />
                         </svg>
-                        <input class="text-center bg-white w-28 focus:outline-none" type="date" name="date_end">
+                        <input class="text-center bg-white w-28 placeholder-gray-700 focus:outline-none" type="date" name="date_end" placeholder="дд.мм.гггг">
                     </label>
                 </div>
             </div>
@@ -199,6 +199,6 @@
     @endif
 
     <div class="flex justify-center w-full mt-8 mb-16">
-        <button id="showMoreVisitsBtn" class="transition duration-300 text-gray-500 border border-gray-500 rounded-md text-sm px-3 py-2 sm:px-5 hover:text-white hover:bg-gray-500 focus:outline-none">Показать больше</button>
+        <button id="showMoreVisitsBtn" class="transition duration-300 text-gray-500 border border-gray-500 rounded-md text-sm px-3 py-2 sm:px-5 hover:text-white hover:bg-gray-500 focus:outline-none">{{ count($visits) === 0 ? 'Визиты отсутствуют' : 'Показать больше' }}</button>
     </div>
 @endsection

@@ -86,7 +86,7 @@ export default class SearchPatientsController extends EventHandler {
     }
 
     showMore() {
-        document.addEventListener('wheel', _ => {
+        const showMoreListener = _ => {
             if (
                 ((this.domElements.showMoreBtn.getBoundingClientRect().top - document.documentElement.clientHeight) < 0)
                 && this.searchingMore === false
@@ -110,6 +110,10 @@ export default class SearchPatientsController extends EventHandler {
                         }
                     });
             }
-        });
+        };
+
+        document.addEventListener('mousewheel', showMoreListener);
+        document.addEventListener('touchmove', showMoreListener);
+        document.addEventListener('click', showMoreListener);
     }
 }

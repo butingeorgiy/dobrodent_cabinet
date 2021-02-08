@@ -49,9 +49,10 @@ class Patient extends Model
     static public function searchByAdministrator($value, $offset)
     {
         $selectRaw = 'id, phone_code, phone, full_name';
+        $value = str_replace(' ', '|', $value);
 
         if (trim($value) !== '') {
-            $selectRaw .= ', CHAR_LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(LOWER(REPLACE(full_name, \' \', \'\')), LOWER(REPLACE(?, \' \', \'\')), \'~\'), \'[^~]\', \'\')) as frequency';
+            $selectRaw .= ', CHAR_LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(REPLACE(CONCAT(full_name, phone_code, phone), \' \', \'\'), ?, \'~\', 1, 0, \'i\'), \'[^~]\', \'\')) as frequency';
             $patients = Patient::selectRaw($selectRaw, [$value])
                 ->orderBy('frequency', 'desc')
                 ->having('frequency', '>', 0);
@@ -84,6 +85,7 @@ class Patient extends Model
     static public function searchByDoctor($value, $offset)
     {
         $selectRaw = 'DISTINCT patients.id as id, phone_code, phone, full_name, IF(visits.id IS NOT NULL, true, false) as was_visit';
+        $value = str_replace(' ', '|', $value);
 
         $patients = Patient::leftJoin('visits', function ($join) {
             $join
@@ -92,7 +94,7 @@ class Patient extends Model
         });
 
         if (trim($value) !== '') {
-            $selectRaw .= ', CHAR_LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(LOWER(REPLACE(full_name, \' \', \'\')), LOWER(REPLACE(?, \' \', \'\')), \'~\'), \'[^~]\', \'\')) as frequency';
+            $selectRaw .= ', CHAR_LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(REPLACE(CONCAT(full_name, phone_code, phone), \' \', \'\'), ?, \'~\', 1, 0, \'i\'), \'[^~]\', \'\')) as frequency';
             $patients = $patients
                 ->selectRaw($selectRaw, [$value])
                 ->orderBy('frequency', 'desc')

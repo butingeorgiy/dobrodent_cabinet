@@ -1,6 +1,7 @@
 import EventHandler from "../../EventHandler";
 import TomSelect from 'tom-select/dist/js/tom-select.complete.min';
 import CreateVisitFormView from "./CreateVisitFormView";
+import Inputmask from "inputmask";
 
 export default class CreateVisitController extends EventHandler {
     constructor(domElements, model) {
@@ -42,6 +43,26 @@ export default class CreateVisitController extends EventHandler {
             );
 
             this.addListenerForCreatingVisit();
+        }
+
+        if (this.domElements.timeInput && this.domElements.dateInput) {
+            this.initDateAndTimeInputs();
+        }
+    }
+
+    initDateAndTimeInputs() {
+        if (this.domElements.timeInput.type !== 'time') {
+            Inputmask({
+                mask: '(0|1|2)9:(0|1|2|3|4|5)9',
+                placeholder: '--:--'
+            }).mask(this.domElements.timeInput);
+        }
+
+        if (this.domElements.dateInput.type !== 'date') {
+            Inputmask({
+                mask: '(0|1|2|3)9.(0|1)9.9999',
+                placeholder: 'дд.мм.гггг'
+            }).mask(this.domElements.dateInput);
         }
     }
 
@@ -127,7 +148,7 @@ export default class CreateVisitController extends EventHandler {
                                 <div class="flex items-center">
                                     <div class="min-w-8 min-h-8 w-8 h-8 p-1 mr-2 bg-center bg-no-repeat bg-contain rounded-full" style="background-image: url(${data.photo})"></div>
                                     <div class="mr-1 text-sm sm:text-base leading-5 hover:bg-gray-50">${escape(data.title)}</div>
-                                    <div class="hidden md:block mr-1 text-sm text-gray-500">${ data.extra !== '' ? '(' + data.extra + ')' : ''}</div>
+                                    <div class="hidden md:block mr-1 text-sm text-gray-500">${data.extra !== '' ? '(' + data.extra + ')' : ''}</div>
                                 </div>
                             `;
                 },
@@ -168,10 +189,38 @@ export default class CreateVisitController extends EventHandler {
 
         let data = {}
 
-        if (this.destSelect) { data.dest = this.destSelect.getValue(); }
-        if (this.domElements.causeTextarea) { data.cause = this.domElements.causeTextarea.value; }
-        if (this.domElements.timeInput) { data.time = this.domElements.timeInput.value; }
-        if (this.domElements.dateInput) { data.date = this.domElements.dateInput.value; }
+        if (this.destSelect) {
+            data.dest = this.destSelect.getValue();
+        }
+
+        if (this.domElements.causeTextarea) {
+            data.cause = this.domElements.causeTextarea.value;
+        }
+
+        if (this.domElements.timeInput) {
+            if (this.domElements.timeInput.type === 'time') {
+                if (this.domElements.timeInput.value !== '') {
+                    data.time = this.domElements.timeInput.value;
+                }
+            } else {
+                if (/\d\d:\d\d/g.test(this.domElements.timeInput.value)) {
+                    data.time = this.domElements.timeInput.value;
+                }
+            }
+        }
+
+        if (this.domElements.dateInput) {
+            if (this.domElements.dateInput.type === 'date') {
+                if (this.domElements.dateInput.value !== '') {
+                    data.date = this.domElements.dateInput.value;
+                }
+            } else {
+                if (/\d\d\.\d\d.\d\d\d\d/g.test(this.domElements.dateInput.value)) {
+                    const date = this.domElements.dateInput.value.split('.');
+                    data.date = date[2] + '-' + date[1] + '-' + date[0];
+                }
+            }
+        }
 
         if (this.patientSelect && (this.mode === 'doctor' || this.mode === 'administrator')) {
             data.patient_id = this.patientSelect.getValue();
@@ -190,7 +239,7 @@ export default class CreateVisitController extends EventHandler {
                         this.createVisitFormView.showSuccessStatus(result.success);
                         setTimeout(_ => {
                             location.assign(`/${this.mode}/visits`);
-                        }, 1000)
+                        }, 1000);
                     }
                 } else {
                     this.addListenerForCreatingVisit();

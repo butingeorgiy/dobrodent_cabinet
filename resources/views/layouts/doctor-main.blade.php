@@ -42,7 +42,7 @@
                      style="background-image: {{ $profilePhoto !== null ? 'url(\'data:image/jpg;base64,' . base64_encode($profilePhoto) . '\'' : 'url(' . asset('images/default_profile.jpg') . ')' }}"></div>
                 <div class="extra-dropdown-menu flex flex-col z-10 hidden absolute top-full right-0 bg-white shadow-2xl border-t border-gray-200">
                     <a class="flex px-4 py-2 hover:bg-gray-100" href="{{ route('doctor-profile') }}">
-                        <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round"
                                   stroke-linejoin="round"
                                   stroke-width="2"
@@ -65,7 +65,7 @@
                         <p class="whitespace-nowrap">Перейти в профиль</p>
                     </a>
                     <a class="flex px-4 py-2 text-red-500 hover:bg-gray-100" href="{{ route('doctor-logout') }}">
-                        <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round"
                                   stroke-linejoin="round"
                                   stroke-width="2"

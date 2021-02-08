@@ -17,7 +17,7 @@
     <p class="mb-3 text-gray-500 font-light text-center">Войти в систему как:</p>
     <div class="flex flex-col sm:flex-row">
         <a href="{{ route('patient-index') }}" class="flex justify-center w-full mb-3 sm:mb-0 text-white bg-gray-400 hover:bg-gray-500 rounded-md text-sm px-5 py-2">
-            <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
@@ -32,7 +32,7 @@
         </a>
 
         <a href="{{ route('doctor-index') }}" class="flex justify-center w-full mb-3 sm:mb-0 sm:mx-5 text-white bg-gray-400 hover:bg-gray-500 rounded-md text-sm px-5 py-2">
-            <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
@@ -48,7 +48,7 @@
         </a>
 
         <a href="{{ route('administrator-index') }}" class="flex justify-center w-full text-white bg-gray-400 hover:bg-gray-500 rounded-md text-sm px-5 py-2">
-            <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"

@@ -39,8 +39,8 @@
             </label>
             <label class="flex flex-col mb-4">
                 <span class="mb-1 font-medium text-gray-700 select-none">Дата рождения</span>
-                <span class="flex self-start bg-white px-3 py-2 text-gray-500 rounded-md border border-gray-300">
-                    <svg class="w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <span class="flex items-center self-start bg-white px-3 py-2 text-gray-500 rounded-md border border-gray-300">
+                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
@@ -49,11 +49,11 @@
                                       0 00-2-2H5a2 2 0 00-2 2v12a2
                                       2 0 002 2z" />
                     </svg>
-                    <input class="text-center bg-white w-28 focus:outline-none" type="date" name="birthday" value="{{ $patient->birthday }}" required>
+                    <input class="text-center bg-white w-28 focus:outline-none placeholder-gray-500" type="date" name="birthday" value="{{ $patient->birthday }}" required placeholder="дд.мм.гггг">
                 </span>
             </label>
             <span class="flex items-center text-red-500 text-sm select-none error-message {{ !$errors->any() ? 'hidden' : '' }}">
-                <svg class="w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round"
                           stroke-linejoin="round"
                           stroke-width="2"
@@ -70,7 +70,7 @@
             </span>
             @if(session('success'))
                 <span class="flex items-center text-green-light text-sm select-none success-message">
-                    <svg class="w-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"

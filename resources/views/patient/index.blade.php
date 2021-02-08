@@ -5,21 +5,90 @@
 @section('content')
     <div class="flex mb-4 select-none">
         <div class="hidden sm:block mr-2 p-3 bg-green-light"></div>
-        <div class="w-full bg-white shadow-md p-4">
-            <a href="{{ route('patient-doctors') }}" class="flex items-center rounded-md  border border-gray-300 px-3 py-2 sm:px-4 sm:py-3">
-                <svg class="w-5 sm:w-6 mr-2 sm:mr-5 text-green-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M21 21l-6-6m2-5a7
-                          7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input class="w-full text-gray-500 placeholder-gray-500 text-lg sm:text-xl outline-none cursor-pointer" type="text" placeholder="Найти врача ...">
-            </a>
-{{--            <div class="mt-2 px-2">--}}
-{{--                <p class="text-gray-400">Недавно искали:</p>--}}
-{{--                <div><i class="text-sm text-gray-300">Список пуст...</i></div>--}}
-{{--            </div>--}}
+        <div class="w-full relative bg-white shadow-md p-4">
+            <div class="flex items-center {{ request()->has('q') ? 'rounded-t-md' : 'rounded-md' }} border border-gray-300 px-3 py-2 sm:px-4 sm:py-3">
+                <div class="flex mr-2 sm:mr-4 global-search-loader">
+                    <svg class="non-loader w-5 h-5 sm:w-6 sm:h-6 text-green-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M21 21l-6-6m2-5a7
+                      7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <svg class="loader hidden animate-spin w-5 h-5 sm:w-6 sm:h-6 text-green-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"></circle>
+                        <path class="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373
+                          0 0 5.373 0 12h4zm2 5.291A7.962
+                          7.962 0 014 12H0c0 3.042 1.135
+                          5.824 3 7.938l3-2.647z" />
+                    </svg>
+                </div>
+                <input class="global-search-input w-full text-gray-500 placeholder-gray-500 text-lg sm:text-xl outline-none"
+                       type="text"
+                       value="{{ request()->get('q') }}"
+                       placeholder="Поиск по кабинету ...">
+                <div class="global-search-clear-btn {{ request()->has('q') ? '' : 'hidden' }} ml-4 cursor-pointer">
+                    <svg class="min-w-5 min-h-5 w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1
+                              0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414
+                              1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414
+                              10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="{{ request()->has('q') ? '' : 'hidden' }} absolute left-0 w-full px-4 max-h-64">
+                <div class="global-search-container flex flex-col w-full max-h-64 pt-2 bg-white border border-t-0 border-gray-300 rounded-b-md overflow-y-scroll shadow-2xl">
+                    @php $isEmpty = true; @endphp
+                    @if(count($global['doctors'] ?? []) > 0)
+                        @php $isEmpty = false; @endphp
+                        <p class="mx-4 mb-2 first:mt-0 text-sm text-gray-500">Врачи:</p>
+                    @endif
+                    @foreach($global['doctors'] ?? [] as $doctor)
+                        <a href="{{ route('patient-doctor', ['id' => $doctor['id']]) }}" class="global-search-item flex px-4 py-2 hover:bg-gray-50 cursor-pointer">
+                            <div class="min-w-10 min-h-10 w-10 h-10 mr-2 sm:mr-4 bg-center bg-no-repeat bg-contain rounded-full border border-gray-300"
+                                 style="background-image: url({{$doctor['profile_photo']}})"></div>
+                            <div class="flex flex-col">
+                                <p class="mb-1 text-green-light font-medium leading-5">{{$doctor['full_name']}}</p>
+                                <i class="text-sm text-gray-400 leading-4">{{$doctor['occupation']}}</i>
+                            </div>
+                        </a>
+                    @endforeach
+                    @if(count($global['visits'] ?? []) > 0)
+                            @php $isEmpty = false; @endphp
+                            <p class="mx-4 mt-4 first:mt-0 mb-2 text-sm text-gray-500">Визиты:</p>
+                    @endif
+                    @foreach($global['visits'] ?? [] as $visit)
+                        <a href="{{ route('patient-visit', ['id' => $visit['id']]) }}" class="global-search-item flex px-4 py-2 hover:bg-gray-50 cursor-pointer">
+                            <div class="flex justify-center items-center min-w-10 min-h-10 w-10 h-10 mr-2 sm:mr-4 bg-center bg-no-repeat bg-contain rounded-full border border-yellow-300">
+                                <p class="text-gray-500 text-xs font-medium">{{$visit['visit_date']}}</p>
+                            </div>
+                            <div class="flex flex-col">
+                                <p class="mb-1 text-green-light font-medium leading-5">Визит № {{$visit['id']}}</p>
+                                <i class="text-sm text-gray-400 leading-4">Леч. врач: <span class="text-gray-500">{{$visit['doctor_full_name']}}</span></i>
+                            </div>
+                        </a>
+                    @endforeach
+                    @if($isEmpty)
+                        <i class="mx-4 mb-2 text-gray-400 text-sm leading-5">По вашему запросу ничего не найдено ...</i>
+                    @endif
+                </div>
+            </div>
+            <div class="mt-2 px-2 select-none">
+                <p class="text-gray-400 mb-1">Недавно искали:</p>
+                <div class="recent-list flex flex-wrap">
+                    <i class="text-sm text-gray-300">Список пуст...</i>
+                </div>
+            </div>
         </div>
     </div>
 

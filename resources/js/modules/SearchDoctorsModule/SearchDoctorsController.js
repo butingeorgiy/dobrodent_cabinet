@@ -85,6 +85,9 @@ export default class SearchDoctorsController extends EventHandler {
                 } else {
                     console.error(result);
                 }
+            })
+            .catch(error => {
+                console.error(error);
             });
     }
 
@@ -97,7 +100,7 @@ export default class SearchDoctorsController extends EventHandler {
     }
 
     showMore() {
-        document.addEventListener('wheel', _ => {
+        const showMoreListener = _ => {
             if (
                 ((this.domElements.showMoreBtn.getBoundingClientRect().top - document.documentElement.clientHeight) < 0)
                 && this.searchingMore === false
@@ -119,8 +122,15 @@ export default class SearchDoctorsController extends EventHandler {
                         } else {
                             console.error(result);
                         }
+                    })
+                    .catch(error => {
+                        console.error(error);
                     });
             }
-        });
+        };
+
+        document.addEventListener('mousewheel', showMoreListener);
+        document.addEventListener('touchmove', showMoreListener);
+        document.addEventListener('click', showMoreListener);
     }
 }

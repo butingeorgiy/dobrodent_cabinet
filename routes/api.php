@@ -1,19 +1,5 @@
 <?php
 
-use App\Models\Doctor;
-use Illuminate\Http\Request;
-
-Route::post('/patients/login', function (Request $request) {
-    $authResponse = App\Facades\Authorization::auth('patient', collect($request->only(['phone', 'password'])), $request->input('authType'), $request->input('needToSave'));
-    return response()
-        ->json($authResponse);
-});
-
-Route::post('/patients/auth-check', function () {
-    $isUserAuth = App\Facades\Authorization::check();
-    return response()->json(['auth' => $isUserAuth]);
-});
-
 Route::post('/patients/is-exist/{field}/{phone}', 'Api\PatientController@isExist');
 
 Route::get('/doctors/patient/search/{offset}', 'Api\DoctorController@get')
@@ -70,7 +56,6 @@ Route::post('/visits/administrator/edit-doctor/{id}', 'Api\VisitController@updat
 Route::post('/visits/administrator/edit-patient/{id}', 'Api\VisitController@updatePatient')
     ->middleware('auth.api:administrator');
 
-
 Route::get('/patients/doctor/{offset}', 'Api\PatientController@getByDoctor')
     ->middleware('auth.api:doctor');
 
@@ -85,3 +70,12 @@ Route::post('/doctors/patient/add-to-favorite', 'Api\PatientController@likeDocto
 
 Route::post('/doctor-reviews/patient/create', 'Api\PatientController@createDoctorReview')
     ->middleware('auth.api:patient');
+
+Route::get('/full-search/patient', 'Api\PatientController@generalSearch')
+    ->middleware('auth.api:patient');
+
+Route::get('/full-search/administrator', 'Api\AdministratorController@generalSearch')
+    ->middleware('auth.api:administrator');
+
+Route::get('/full-search/doctor', 'Api\DoctorController@generalSearch')
+    ->middleware('auth.api:doctor');

@@ -1,9 +1,6 @@
 <?php
 
-
-Route::get('/', function () {
-    return view('home');
-});
+Route::view('/', 'home');
 
 Route::get('/patient', 'PatientController@index')
     ->middleware('auth:patient')
@@ -68,7 +65,7 @@ Route::get('/patient/clinics', 'PatientController@showClinics')
 
 # ---------------------------------------------------
 
-Route::view('/administrator', 'administrator.index')
+Route::get('/administrator', 'AdministratorController@index')
     ->middleware('auth:administrator')
     ->name('administrator-index');
 

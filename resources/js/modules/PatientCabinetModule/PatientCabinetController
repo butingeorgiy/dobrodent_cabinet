@@ -1,11 +1,12 @@
 import PatientProfileFormView from "./PatientProfileFormView";
 import EventHandler from "../../EventHandler";
+import Inputmask from "inputmask";
 
 export default class PatientCabinetController extends EventHandler {
     constructor(domElements) {
         super();
 
-        this.domElemenst = domElements;
+        this.domElements = domElements;
 
         this.saveProfileDataChanges = this.saveProfileDataChanges.bind(this);
 
@@ -14,29 +15,42 @@ export default class PatientCabinetController extends EventHandler {
             this.duplicateGanderValueIntoHiddenInput();
             this.showProfilePhotoAfterChanging();
         }
+
+        if (this.domElements.patientBirthdayInput) {
+            this.initBirthdayInput();
+        }
+    }
+
+    initBirthdayInput() {
+        if (this.domElements.patientBirthdayInput.type !== 'date') {
+            Inputmask({
+                mask: '(0|1|2|3)9.(0|1)9.9999',
+                placeholder: 'дд.мм.гггг'
+            }).mask(this.domElements.patientBirthdayInput);
+        }
     }
 
     saveProfileDataChanges() {
         if (
-            this.domElemenst.savePatientProfileBtn &&
-            this.domElemenst.confirmPatientProfileBtn &&
-            this.domElemenst.patientProfileFormErrorBox
+            this.domElements.savePatientProfileBtn &&
+            this.domElements.confirmPatientProfileBtn &&
+            this.domElements.patientProfileFormErrorBox
         ) {
-            const formView = new PatientProfileFormView(this.domElemenst.patientProfileForm);
+            const formView = new PatientProfileFormView(this.domElements.patientProfileForm);
 
-            this.addEvent(this.domElemenst.savePatientProfileBtn, 'click', _ => {
+            this.addEvent(this.domElements.savePatientProfileBtn, 'click', _ => {
                 formView.moveToConfirmation(
-                    this.domElemenst.patientProfileFormErrorBox,
-                    this.domElemenst.savePatientProfileBtn,
-                    this.domElemenst.confirmPatientProfileBtn.parentElement.parentElement
+                    this.domElements.patientProfileFormErrorBox,
+                    this.domElements.savePatientProfileBtn,
+                    this.domElements.confirmPatientProfileBtn.parentElement.parentElement
                 );
             });
         }
     }
 
     duplicateGanderValueIntoHiddenInput() {
-        const hiddenInput = this.domElemenst.patientProfileForm.querySelector('input[name=\'gender\']');
-        const select  = this.domElemenst.patientProfileForm.querySelector('select[name=\'gender\']');
+        const hiddenInput = this.domElements.patientProfileForm.querySelector('input[name=\'gender\']');
+        const select  = this.domElements.patientProfileForm.querySelector('select[name=\'gender\']');
 
         if (hiddenInput && select) {
             this.addEvent(select, 'change', event => {
@@ -46,7 +60,7 @@ export default class PatientCabinetController extends EventHandler {
     }
 
     showProfilePhotoAfterChanging() {
-        const input = this.domElemenst.patientProfileForm.querySelector('input[name=\'profile_photo\']');
+        const input = this.domElements.patientProfileForm.querySelector('input[name=\'profile_photo\']');
         const label = input.parentElement;
 
         if (input && label) {

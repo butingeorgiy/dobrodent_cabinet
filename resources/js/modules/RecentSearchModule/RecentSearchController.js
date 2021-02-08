@@ -10,7 +10,7 @@ export default class RecentSearchController extends EventHandler {
     }
 
     renderRecentLinks() {
-        const mode = location.pathname.split('/')[2];
+        const mode = location.pathname.split('/')[2] || 'global';
         const links = JSON.parse(localStorage.getItem('recent') || '[]')[mode] || [];
 
         if (links.length !== 0) {
@@ -18,8 +18,14 @@ export default class RecentSearchController extends EventHandler {
         }
 
         links.forEach(link => {
+            let href = `/${location.pathname.split('/')[1]}/${mode}/?q=${link}`;
+
+            if (mode === 'global') {
+                href = `${location.pathname.split('/')[1]}/?q=${link}`;
+            }
+
             this.domElements.linksContainer.innerHTML += `
-                <a href="/${location.pathname.split('/')[1]}/${mode}/?q=${link}" class="mr-1 mb-1 py-1 px-2 border border-gray-500 rounded text-sm text-gray-500">${link}</a>
+                <a href="${href}" class="mr-1 mb-1 py-1 px-2 border border-gray-500 rounded text-sm text-gray-500">${link}</a>
             `;
         });
     }

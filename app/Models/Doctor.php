@@ -5,12 +5,15 @@ namespace App\Models;
 use App\Facades\Authorization;
 use App\Models\AuthTokens\DoctorToken;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class Doctor extends Model
 {
+    use SoftDeletes;
+
     public $timestamps = false;
 
     protected $guarded = [];
@@ -48,16 +51,17 @@ class Doctor extends Model
         return $this->belongsToMany(Patient::class, 'patients_likes_doctors');
     }
 
-    static public function search($value, $offset)
+    static public function search($value, $offset, $liteSearch = false)
     {
         $output = [];
+        $value = str_replace(' ', '|', $value);
 
         if (trim($value) === '') {
             $doctors = DB::table('doctors')
                 ->leftJoin('doctors_occupations', 'doctors.id', '=', 'doctors_occupations.doctor_id')
                 ->leftJoin('occupations', 'occupations.id', '=', 'doctors_occupations.occupation_id')
-                ->selectRaw('doctors.id as id, GROUP_CONCAT(occupations.title SEPARATOR \', \') as occupation, full_name')
-                ->groupBy(['id', 'full_name'])
+                ->selectRaw('doctors.id as id, full_name')
+                ->whereNull('deleted_at')
                 ->limit(15)
                 ->offset($offset)
                 ->get();
@@ -66,14 +70,20 @@ class Doctor extends Model
                 ->leftJoin('doctors_occupations', 'doctors.id', '=', 'doctors_occupations.doctor_id')
                 ->leftJoin('occupations', 'occupations.id', '=', 'doctors_occupations.occupation_id')
                 ->selectRaw(
-                    'doctors.id as id, GROUP_CONCAT(occupations.title SEPARATOR \', \') as occupation, CHAR_LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(LOWER(REPLACE(CONCAT(full_name, IF(occupations.title IS NOT NULL, occupations.title, \'\')), \' \', \'\')), LOWER(REPLACE(?, \' \', \'\')), \'~\'), \'[^~]\', \'\')) as frequency, full_name',
+                    'doctors.id, CHAR_LENGTH(REGEXP_REPLACE(REGEXP_REPLACE(LOWER(REPLACE(CONCAT(full_name, IF(occupations.title IS NOT NULL, occupations.title, \'\')), \' \', \'\')), ?, \'~\', 1, 0, \'i\'), \'[^~]\', \'\')) as frequency, full_name',
                     [$value]
-                )->having('frequency', '>', 0)->orderByDesc('frequency')->groupBy(['id', 'full_name', 'frequency'])->limit(15)->offset($offset)->get();
+                )
+                ->whereNull('deleted_at')
+                ->having('frequency', '>', 0)
+                ->orderByDesc('frequency')
+                ->limit(15)
+                ->offset($offset)
+                ->get();
         }
 
         $user = Authorization::user();
 
-        foreach ($doctors as $doctor) {
+        foreach ($doctors->unique('id') as $doctor) {
             $item = [
                 'id' => $doctor->id,
                 'full_name' => $doctor->full_name
@@ -86,18 +96,34 @@ class Doctor extends Model
             }
 
             $item['profile_photo'] = $avatar;
-            $item['occupation'] = $doctor->occupation ?: 'Специализация не указана';
+            $item['occupation'] = null;
 
             $doctorEloquent = Doctor::find($doctor->id);
 
-            $likes = $doctorEloquent->likes();
+            $occupations = $doctorEloquent->occupations()->get();
 
-            $item['likes'] = $likes->get()->count();
+            foreach ($occupations as $i => $occupation) {
+                $item['occupation'] .= $occupation->title;
 
-            if (get_class($user) === Patient::class) {
-                $item['is_liked'] = $likes->get()->contains($user);
-            } else {
-                $item['is_liked'] = false;
+                if ($i < count($occupations) - 1) {
+                    $item['occupation'] .= ', ';
+                }
+            }
+
+            if (!$item['occupation']) {
+                $item['occupation'] = 'Специализация не указана';
+            }
+
+            if (!$liteSearch) {
+                $likes = $doctorEloquent->likes();
+
+                $item['likes'] = $likes->get()->count();
+
+                if (get_class($user) === Patient::class) {
+                    $item['is_liked'] = $likes->get()->contains($user);
+                } else {
+                    $item['is_liked'] = false;
+                }
             }
 
             $output[] = $item;
