@@ -36,6 +36,7 @@
     },
     "dependencies": {
         "@ckeditor/ckeditor5-build-classic": "^24.0.0",
+        "flatpickr": "^4.6.9",
         "inputmask": "^5.0.5",
         "tom-select": "^1.1.0"
     }

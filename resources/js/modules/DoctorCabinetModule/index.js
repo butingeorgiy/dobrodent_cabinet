@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', _ => {
     const saveDoctorProfileBtn = document.querySelector('#saveDoctorProfileBtn');
     const confirmDoctorProfileBtn = document.querySelector('#confirmDoctorProfileBtn');
     const doctorProfileFormErrorBox = document.querySelector('#doctorProfileForm .error-message');
+    const doctorBirthdayInput = document.querySelector('#doctorProfileForm input[name=\'birthday\'][type=\'text\']');
+    const doctorBirthdayHiddenInput = document.querySelector('#doctorProfileForm input[name=\'birthday\'][type=\'hidden\']');
 
     const descriptionEditor = document.querySelector('#doctorDescriptionEditor');
     const doctorProfessionalInfoForm = document.querySelector('#doctorProfessionalInfoForm');
@@ -23,6 +25,8 @@ document.addEventListener('DOMContentLoaded', _ => {
         saveDoctorProfessionalInfoBtn,
         confirmDoctorProfessionalInfoBtn,
         doctorProfessionalInfoErrorBox,
-        occupationsSelect
+        occupationsSelect,
+        doctorBirthdayInput,
+        doctorBirthdayHiddenInput
     });
 });

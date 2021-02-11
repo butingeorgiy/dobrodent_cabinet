@@ -54,7 +54,7 @@
                         <p class="mx-4 mb-2 first:mt-0 text-sm text-gray-500">Врачи:</p>
                     @endif
                     @foreach($global['doctors'] ?? [] as $doctor)
-                        <a href="{{ route('patient-doctor', ['id' => $doctor['id']]) }}" class="global-search-item flex px-4 py-2 hover:bg-gray-50 cursor-pointer">
+                        <a href="{{ route('patient-doctor', ['id' => $doctor['id']]) }}" class="global-search-item flex min-h-14 px-4 py-2 hover:bg-gray-50 cursor-pointer">
                             <div class="min-w-10 min-h-10 w-10 h-10 mr-2 sm:mr-4 bg-center bg-no-repeat bg-contain rounded-full border border-gray-300"
                                  style="background-image: url({{$doctor['profile_photo']}})"></div>
                             <div class="flex flex-col">
@@ -68,7 +68,7 @@
                             <p class="mx-4 mt-4 first:mt-0 mb-2 text-sm text-gray-500">Визиты:</p>
                     @endif
                     @foreach($global['visits'] ?? [] as $visit)
-                        <a href="{{ route('patient-visit', ['id' => $visit['id']]) }}" class="global-search-item flex px-4 py-2 hover:bg-gray-50 cursor-pointer">
+                        <a href="{{ route('patient-visit', ['id' => $visit['id']]) }}" class="global-search-item flex min-h-14 px-4 py-2 hover:bg-gray-50 cursor-pointer">
                             <div class="flex justify-center items-center min-w-10 min-h-10 w-10 h-10 mr-2 sm:mr-4 bg-center bg-no-repeat bg-contain rounded-full border border-yellow-300">
                                 <p class="text-gray-500 text-xs font-medium">{{$visit['visit_date']}}</p>
                             </div>

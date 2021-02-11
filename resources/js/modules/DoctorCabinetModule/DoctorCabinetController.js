@@ -3,6 +3,9 @@ import DoctorProfileFormView from "./DoctorProfileFormView";
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import DoctorProfessionalInfoFormView from "./DoctorProfessionalInfoFormView";
 import TomSelect from "tom-select";
+import flatpickr from "flatpickr";
+import {Russian} from "flatpickr/dist/l10n/ru";
+import Helper from "../../Helper";
 
 export default class DoctorCabinetController extends EventHandler {
     constructor(domElements) {
@@ -19,6 +22,7 @@ export default class DoctorCabinetController extends EventHandler {
         }
 
         if (domElements.doctorProfileForm) {
+            this.initBirthdayInput();
             this.saveProfileDataChanges();
             this.duplicateGanderValueIntoHiddenInput();
             this.showProfilePhotoAfterChanging();
@@ -27,6 +31,17 @@ export default class DoctorCabinetController extends EventHandler {
         if (domElements.descriptionEditor) {
             this.initDescriptionEditor();
         }
+    }
+
+    initBirthdayInput() {
+        this.datePicker = flatpickr(this.domElements.doctorBirthdayInput, {
+            dateFormat: 'd.m.Y',
+            locale: Russian,
+            onChange: (selectedDates, dateStr, instance) => {
+                this.domElements.doctorBirthdayHiddenInput.value = Helper.parseDateToString(selectedDates[0]);
+                console.log(this.domElements.doctorBirthdayHiddenInput.value);
+            }
+        });
     }
 
     saveProfileDataChanges() {

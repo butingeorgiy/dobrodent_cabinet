@@ -1,5 +1,6 @@
 @import "/css/font.css";
 @import "/css/tom-select.css";
+@import "/css/flatpickr.min.css";
 
 @tailwind base;
 @tailwind components;
@@ -11,12 +12,25 @@ body {
     min-width: 320px !important;
 }
 
-input[type="date"]::-webkit-inner-spin-button,
-input[type="time"]::-webkit-inner-spin-button,
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="time"]::-webkit-calendar-picker-indicator {
-    display: none;
-    -webkit-appearance: none;
+select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+}
+
+select:hover {
+    background: none !important;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-inner-spin-button,
+input::-webkit-calendar-picker-indicator,
+input::-webkit-calendar-picker-indicator {
+    display: none !important;
+    -webkit-appearance: none !important;
+    -o-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
 }
 
 input, button, div {

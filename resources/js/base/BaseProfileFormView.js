@@ -88,7 +88,8 @@ export default class BaseProfileFormView {
             this.middleName.className += ' cursor-not-allowed bg-gray-100';
             this.email.setAttribute('readonly', 'readonly');
             this.email.className += ' cursor-not-allowed bg-gray-100';
-            this.birthday.setAttribute('readonly', 'readonly');
+            this.birthday.parentElement.className += ' cursor-not-allowed bg-gray-100';
+            this.birthday.setAttribute('disabled', 'disabled');
             this.birthday.className += ' cursor-not-allowed bg-gray-100';
             this.gender.setAttribute('disabled', 'disabled');
             this.gender.className += ' disabled:cursor-not-allowed disabled:bg-gray-100';

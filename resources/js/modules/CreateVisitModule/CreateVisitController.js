@@ -2,6 +2,9 @@ import EventHandler from "../../EventHandler";
 import TomSelect from 'tom-select/dist/js/tom-select.complete.min';
 import CreateVisitFormView from "./CreateVisitFormView";
 import Inputmask from "inputmask";
+import flatpickr from "flatpickr";
+import {Russian} from "flatpickr/dist/l10n/ru";
+import Helper from "../../Helper";
 
 export default class CreateVisitController extends EventHandler {
     constructor(domElements, model) {
@@ -51,19 +54,17 @@ export default class CreateVisitController extends EventHandler {
     }
 
     initDateAndTimeInputs() {
-        if (this.domElements.timeInput.type !== 'time') {
-            Inputmask({
-                mask: '(0|1|2)9:(0|1|2|3|4|5)9',
-                placeholder: '--:--'
-            }).mask(this.domElements.timeInput);
-        }
+        this.visitDatePicker = flatpickr(this.domElements.dateInput, {
+            dateFormat: 'd.m.Y',
+            locale: Russian
+        });
 
-        if (this.domElements.dateInput.type !== 'date') {
-            Inputmask({
-                mask: '(0|1|2|3)9.(0|1)9.9999',
-                placeholder: 'дд.мм.гггг'
-            }).mask(this.domElements.dateInput);
-        }
+        this.visitTimePicher = flatpickr(this.domElements.timeInput, {
+            noCalendar: true,
+            enableTime: true,
+            dateFormat: 'H:i',
+            locale: Russian
+        });
     }
 
     initPatientsSelect() {
@@ -198,27 +199,14 @@ export default class CreateVisitController extends EventHandler {
         }
 
         if (this.domElements.timeInput) {
-            if (this.domElements.timeInput.type === 'time') {
-                if (this.domElements.timeInput.value !== '') {
-                    data.time = this.domElements.timeInput.value;
-                }
-            } else {
-                if (/\d\d:\d\d/g.test(this.domElements.timeInput.value)) {
-                    data.time = this.domElements.timeInput.value;
-                }
+            if (this.visitTimePicher.selectedDates.length > 0) {
+                data.time = Helper.parseTimeToString(this.visitTimePicher.selectedDates[0]);
             }
         }
 
         if (this.domElements.dateInput) {
-            if (this.domElements.dateInput.type === 'date') {
-                if (this.domElements.dateInput.value !== '') {
-                    data.date = this.domElements.dateInput.value;
-                }
-            } else {
-                if (/\d\d\.\d\d.\d\d\d\d/g.test(this.domElements.dateInput.value)) {
-                    const date = this.domElements.dateInput.value.split('.');
-                    data.date = date[2] + '-' + date[1] + '-' + date[0];
-                }
+            if (this.visitDatePicker.selectedDates.length > 0) {
+                data.date = Helper.parseDateToString(this.visitDatePicker.selectedDates[0]);
             }
         }
 

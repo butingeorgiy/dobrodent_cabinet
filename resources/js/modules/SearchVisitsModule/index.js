@@ -12,8 +12,7 @@ document.addEventListener('DOMContentLoaded', _ => {
     const visitDoctorsSelect = document.querySelector('.visit-doctors-select');
     const visitPatientSelect = document.querySelector('.visit-patients-select');
     const visitIllnessesSelect = document.querySelector('.visit-illnesses-select');
-    const dateStartInput = document.querySelector('input[name=\'date_start\']');
-    const dateEndInput = document.querySelector('input[name=\'date_end\']');
+    const datePeriodInput = document.querySelector('input[name=\'date_period\']');
 
     new ShowVisitsController({
         showVisitsFiltersBtn,
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', _ => {
         visitDoctorsSelect,
         visitPatientSelect,
         visitIllnessesSelect,
-        dateStartInput,
-        dateEndInput
+        datePeriodInput
     }, new ShowVisitsModel());
 });
