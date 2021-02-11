@@ -74,7 +74,7 @@
                     Записаться снова
                 </a>
 
-                <a href="#" class="flex justify-center items-center mx-4 px-4 py-2 border border-gray-500 text-sm sm:text-base text-gray-500 rounded-md transition duration-300 ease hover:bg-gray-500 hover:border-gray-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">
+                <a href="{{ $visit->doctor ? route('patient-doctor', ['id' => $visit->doctor->id]) . '#create-review' : '' }}" class="flex justify-center {{ $visit->doctor ? '' : 'pointer-events-none opacity-50' }} items-center mx-4 px-4 py-2 border border-gray-500 text-sm sm:text-base text-gray-500 rounded-md transition duration-300 ease hover:bg-gray-500 hover:border-gray-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">
                     <svg class="w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
                         <path stroke-linecap="round"

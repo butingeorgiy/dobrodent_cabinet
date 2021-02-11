@@ -20,4 +20,8 @@ export default class ExtraDropdownMenuView {
             this._isShown = false;
         }
     }
+
+    isShown() {
+        return this._isShown;
+    }
 }

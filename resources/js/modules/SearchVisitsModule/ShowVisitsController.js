@@ -2,7 +2,9 @@ import EventHandler from "../../EventHandler";
 import FiltersContainerView from "./FiltersContainerView";
 import VisitsListView from "./VisitsListView";
 import TomSelect from 'tom-select/dist/js/tom-select.complete.min';
-import Inputmask from 'inputmask';
+import flatpickr from "flatpickr";
+import { Russian } from 'flatpickr/dist/l10n/ru.js'
+import Helper from "../../Helper";
 
 export default class ShowVisitsController extends EventHandler {
     constructor(domElements, model) {
@@ -14,12 +16,17 @@ export default class ShowVisitsController extends EventHandler {
         this.mode = location.pathname.split('/')[1];
         this.searchingMore = false;
         this.canShowMore = true;
+        this.prevFilters = null;
 
         this.allowToShowMore = this.allowToShowMore.bind(this);
         this.forbidToShowMore = this.forbidToShowMore.bind(this);
 
         if (domElements.showVisitsFiltersBtn && domElements.visitsFilters) {
             this.showFilters();
+        }
+
+        if (domElements.datePeriodInput) {
+            this.initDateInputs();
         }
 
         if (domElements.visitStatusesSelect) {
@@ -52,22 +59,14 @@ export default class ShowVisitsController extends EventHandler {
                 domElements.visitsAmountIndicator
             );
         }
-
-        if (domElements.dateStartInput && domElements.dateEndInput) {
-            this.initDateInputs();
-        }
     }
 
     initDateInputs() {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'date');
-
-        if (input.type !== 'date') {
-            Inputmask({
-                mask: '(0|1|2|3)9.(0|1)9.9999',
-                placeholder: 'дд.мм.гггг'
-            }).mask([this.domElements.dateStartInput, this.domElements.dateEndInput]);
-        }
+        this.datePicker = flatpickr(this.domElements.datePeriodInput, {
+            mode: 'range',
+            dateFormat: 'd.m.Y',
+            locale: Russian
+        });
     }
 
     showFilters() {
@@ -163,9 +162,7 @@ export default class ShowVisitsController extends EventHandler {
             }
         };
 
-        document.addEventListener('mousewheel', showMoreListener);
-        document.addEventListener('touchmove', showMoreListener);
-        document.addEventListener('click', showMoreListener);
+        this.addEvent(window, 'scroll', showMoreListener);
     }
 
     showVisits(needToClear = false) {
@@ -193,16 +190,17 @@ export default class ShowVisitsController extends EventHandler {
 
     acceptFilters() {
         this.addEvent(this.domElements.acceptVisitsFiltersBtn, 'click', _ => {
-            this.visitsListView.reset(this.allowToShowMore, this.forbidToShowMore);
             this.filters = this.getFilters();
-            this.showVisits(true);
+            if (JSON.stringify(this.filters) !== JSON.stringify(this.prevFilters)) {
+                this.prevFilters = this.filters;
+                this.visitsListView.reset(this.allowToShowMore, this.forbidToShowMore);
+                this.showVisits(true);
+            }
         });
     }
 
     getFilters() {
-        let dateStartInput = this.domElements.dateStartInput,
-            dateEndInput = this.domElements.dateEndInput,
-            filters = {};
+        let filters = {};
 
         if (this.statusesSelect) {
             filters.statuses = JSON.stringify(this.statusesSelect.getValue());
@@ -220,38 +218,15 @@ export default class ShowVisitsController extends EventHandler {
             }
         }
 
-        if (dateStartInput) {
-            if (dateStartInput.type === 'date') {
-                if (dateStartInput.value !== '') {
-                    filters.date_start = dateStartInput.value;
-                    console.log(123);
-                }
-            } else {
-                if (/\d\d\.\d\d.\d\d\d\d/g.test(dateStartInput.value)) {
-                    const dateStart = dateStartInput.value.split('.');
-                    filters.date_start = dateStart[2] + '-' + dateStart[1] + '-' + dateStart[0];
-                }
-            }
-        }
-
-        if (dateEndInput) {
-            if (dateEndInput.type === 'date') {
-                if (dateEndInput.value !== '') {
-                    console.log(123);
-                    filters.date_end = dateEndInput.value;
-                }
-            } else {
-                if (/\d\d\.\d\d.\d\d\d\d/g.test(dateEndInput.value)) {
-                    const dateEnd = dateEndInput.value.split('.');
-                    filters.date_end = dateEnd[2] + '-' + dateEnd[1] + '-' + dateEnd[0];
-                }
-            }
-        }
-
         if (this.illnessesSelect && this.mode === 'patient') {
             if (this.illnessesSelect.getValue().length !== 0) {
                 filters.illnesses = JSON.stringify(this.illnessesSelect.getValue());
             }
+        }
+
+        if (this.datePicker.selectedDates.length > 0) {
+            filters.date_start = Helper.parseDateToString(this.datePicker.selectedDates[0]);
+            filters.date_end = Helper.parseDateToString(this.datePicker.selectedDates[1]);
         }
 
         return filters;

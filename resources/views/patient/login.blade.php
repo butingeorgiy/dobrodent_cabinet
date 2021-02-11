@@ -50,7 +50,7 @@
 {{--                <button class="self-start px-4 py-2 border border-gray-500 text-gray-500 rounded-md transition duration-300 ease select-none hover:bg-gray-500 hover:border-gray-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50">--}}
 {{--                    Забыли пароль?--}}
 {{--                </button>--}}
-                <span class="mx-auto mt-6 text-sm text-gray-700 font-light select-none">Нет аккаунта? <a href="{{ route('patient-reg-form') }}" class="text-blue-600 hover:underline">Загеристрируйтесь!</a></span>
+                <span class="mx-auto mt-6 text-sm text-gray-700 font-light select-none">Нет аккаунта? <a href="{{ route('patient-reg-form') }}" class="text-blue-600 hover:underline">Зарегистрируйтесь!</a></span>
             @elseif(request()->step === '2' and request()->type === 'code')
                 <form id="patientLoginSMSCodeForm" class="flex flex-col" action="{{ route('patient-login-by-code') }}" method="POST">
                     <label for="patientLoginSMSCodeInput" class="font-light mb-4 text-gray-700 select-none">Введите код из полученного СМС-сообщения:</label>

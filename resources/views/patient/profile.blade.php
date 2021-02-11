@@ -30,16 +30,16 @@
             </label>
             <label class="flex flex-col mb-4">
                 <span class="mb-1 font-medium text-gray-700 select-none">Пол</span>
-                <select class="border border-gray-300 bg-white rounded-md px-3 py-2 outline-none text-gray-500" name="gender" required>
+                <select class="border border-gray-300 bg-white rounded-md px-3 py-2 outline-none text-gray-500 cursor-pointer opacity-100" name="gender" required>
                     <option>Укажите свой пол</option>
                     <option value="0" {{ $patient->gender === '0' ? 'selected' : '' }}>Мужской</option>
                     <option value="1" {{ $patient->gender === '1' ? 'selected' : '' }}>Женский</option>
                 </select>
                 <input name="gender" type="text" value="{{ $patient->gender }}" hidden>
             </label>
-            <label class="flex flex-col mb-4">
+            <label class="flex flex-col self-start mb-4">
                 <span class="mb-1 font-medium text-gray-700 select-none">Дата рождения</span>
-                <span class="flex items-center self-start bg-white px-3 py-2 text-gray-500 rounded-md border border-gray-300">
+                <span class="flex items-center self-start bg-white px-3 py-2 text-gray-500 rounded-md border border-gray-300 cursor-pointer">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round"
                               stroke-linejoin="round"
@@ -49,7 +49,8 @@
                                       0 00-2-2H5a2 2 0 00-2 2v12a2
                                       2 0 002 2z" />
                     </svg>
-                    <input class="text-center bg-white w-28 focus:outline-none placeholder-gray-500" type="date" name="birthday" value="{{ $patient->birthday }}" required placeholder="дд.мм.гггг">
+                    <input class="text-center bg-white w-28 focus:outline-none text-gray-500 placeholder-gray-500 opacity-100" type="text" name="birthday" value="{{ $patient->birthday ? \Illuminate\Support\Carbon::parse($patient->birthday)->format('d.m.Y') : '' }}" required placeholder="дд.мм.гггг">
+                    <input type="hidden" name="birthday">
                 </span>
             </label>
             <span class="flex items-center text-red-500 text-sm select-none error-message {{ !$errors->any() ? 'hidden' : '' }}">

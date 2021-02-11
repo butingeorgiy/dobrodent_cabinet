@@ -112,8 +112,6 @@ export default class SearchPatientsController extends EventHandler {
             }
         };
 
-        document.addEventListener('mousewheel', showMoreListener);
-        document.addEventListener('touchmove', showMoreListener);
-        document.addEventListener('click', showMoreListener);
+        this.addEvent(window, 'scroll', showMoreListener);
     }
 }

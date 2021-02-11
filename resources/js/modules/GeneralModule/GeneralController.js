@@ -16,7 +16,7 @@ export default class GeneralController extends EventHandler{
         if (this.domElements.openExtraDropdownMenuBtn[0] && this.domElements.openExtraDropdownMenuBtn[1] && this.domElements.extraDropdownMenu) {
             const view = new ExtraDropdownMenuView(this.domElements.extraDropdownMenu);
 
-            this.addEvent(document.body, 'click', event => {
+            this.addEvent(window, 'click', event => {
                 if (!event.target.classList.contains('open-extra-dropdown-menu-btn')) {
                     view.hide();
                 }

@@ -52,7 +52,7 @@
                 <span class="mt-2 mb-2">По дате:</span>
                 <div class="flex flex-col sm:flex-row">
                     <label class="flex items-center bg-white px-3 py-1 text-gray-700 rounded-md border border-gray-300">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round"
                                   stroke-linejoin="round"
                                   stroke-width="2"
@@ -61,20 +61,7 @@
                                   0 00-2-2H5a2 2 0 00-2 2v12a2
                                   2 0 002 2z" />
                         </svg>
-                        <input class="text-center bg-white w-28 placeholder-gray-700 focus:outline-none" type="date" name="date_start" placeholder="дд.мм.гггг">
-                    </label>
-                    <span class="mx-3 self-center"> – </span>
-                    <label class="flex items-center bg-white px-3 py-1 text-gray-700 rounded-md border border-gray-300">
-                        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M8 7V3m8 4V3m-9 8h10M5
-                                  21h14a2 2 0 002-2V7a2 2
-                                  0 00-2-2H5a2 2 0 00-2 2v12a2
-                                  2 0 002 2z" />
-                        </svg>
-                        <input class="text-center bg-white w-28 placeholder-gray-700 focus:outline-none" type="date" name="date_end" placeholder="дд.мм.гггг">
+                        <input class="bg-white min-w-36 placeholder-gray-700 focus:outline-none" type="text" name="date_period" placeholder="дд.мм.гггг">
                     </label>
                 </div>
             </div>
