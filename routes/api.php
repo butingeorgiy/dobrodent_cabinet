@@ -71,8 +71,7 @@ Route::post('/doctors/patient/add-to-favorite', 'Api\PatientController@likeDocto
 Route::post('/doctor-reviews/patient/create', 'Api\PatientController@createDoctorReview')
     ->middleware('auth.api:patient');
 
-Route::get('/full-search/patient', 'Api\PatientController@generalSearch')
-    ->middleware('auth.api:patient');
+Route::get('/full-search/patient', 'Api\PatientController@generalSearch');
 
 Route::get('/full-search/administrator', 'Api\AdministratorController@generalSearch')
     ->middleware('auth.api:administrator');
