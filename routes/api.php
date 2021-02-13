@@ -1,5 +1,9 @@
 <?php
 
+Route::post('/sms-code/send', 'Api\SmsCodeController@send');
+
+Route::post('/patients/login-by-password', 'Api\PatientController@loginByPassword');
+
 Route::post('/patients/is-exist/{field}/{phone}', 'Api\PatientController@isExist');
 
 Route::get('/doctors/patient/search/{offset}', 'Api\DoctorController@get')
@@ -71,7 +75,8 @@ Route::post('/doctors/patient/add-to-favorite', 'Api\PatientController@likeDocto
 Route::post('/doctor-reviews/patient/create', 'Api\PatientController@createDoctorReview')
     ->middleware('auth.api:patient');
 
-Route::get('/full-search/patient', 'Api\PatientController@generalSearch');
+Route::get('/full-search/patient', 'Api\PatientController@generalSearch')
+    ->middleware('auth.api:patient');
 
 Route::get('/full-search/administrator', 'Api\AdministratorController@generalSearch')
     ->middleware('auth.api:administrator');

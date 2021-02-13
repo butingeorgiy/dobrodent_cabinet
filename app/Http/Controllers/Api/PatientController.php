@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class PatientController extends Controller
 {
@@ -198,5 +199,47 @@ class PatientController extends Controller
         $output['visits'] = Visit::search($value, 0, true);
 
         return $output;
+    }
+
+    public function loginByPassword(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'phone' => 'bail|required',
+                'password' => 'bail|required'
+            ],
+            [
+                'phone.required' => 'Необходимо указать номер телефона!',
+                'password.required' => 'Необходмо указать пароль!'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => true,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        try {
+            $authCookies = Authorization::auth(
+                'patient',
+                collect($request->only(['phone', 'password'])),
+                'password',
+                $request->post('needToSave') === 'true'
+            );
+
+            return response()->json([
+                'id' => $authCookies['id'][0],
+                'token' => $authCookies['token'][0],
+                'entityName' => $authCookies['entityName'][0]
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }
