@@ -1,5 +1,9 @@
 <?php
 
+Route::post('/sms-code/send', 'Api\SmsCodeController@send');
+
+Route::post('/patients/login-by-password', 'Api\PatientController@loginByPassword');
+
 Route::post('/patients/is-exist/{field}/{phone}', 'Api\PatientController@isExist');
 
 Route::get('/doctors/patient/search/{offset}', 'Api\DoctorController@get')
