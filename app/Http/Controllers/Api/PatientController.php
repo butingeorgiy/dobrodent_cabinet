@@ -242,4 +242,44 @@ class PatientController extends Controller
             ]);
         }
     }
+
+    public function loginByCode(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'code' => 'required'
+            ],
+            [
+                'code.required' => 'Необходмо ввести код'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => true,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        try {
+            $authCookies = Authorization::auth(
+                'patient',
+                collect($request->only(['code'])),
+                'code',
+                $request->post('needToSave') === 'true'
+            );
+
+            return response()->json([
+                'id' => $authCookies['id'][0],
+                'token' => $authCookies['token'][0],
+                'entityName' => $authCookies['entityName'][0]
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }
