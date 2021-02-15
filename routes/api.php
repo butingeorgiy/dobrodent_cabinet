@@ -8,6 +8,8 @@ Route::post('/patients/is-exist/{field}/{phone}', 'Api\PatientController@isExist
 
 Route::post('/patients/login-by-code', 'Api\PatientController@loginByCode');
 
+Route::post('/patients/is-auth', 'Api\PatientController@isAuth');
+
 Route::get('/doctors/patient/search/{offset}', 'Api\DoctorController@get')
     ->middleware('auth.api:patient');
 

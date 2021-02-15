@@ -17,6 +17,20 @@ use Throwable;
 
 class PatientController extends Controller
 {
+    public function isAuth()
+    {
+        try {
+            $isAuth = Authorization::check('patient');
+
+            return response()->json(compact('isAuth'));
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
     /**
      * @param $field
      * @param $value
