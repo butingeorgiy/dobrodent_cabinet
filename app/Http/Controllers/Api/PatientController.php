@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Exceptions\Api\UncategorizedApiException;
 use App\Facades\Authorization;
+use App\Facades\SafeVar;
 use App\Models\Doctor;
 use App\Models\DoctorReview;
 use App\Models\Patient;
@@ -13,10 +14,82 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Throwable;
 
 class PatientController extends Controller
 {
+    public function create(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'first_name' => 'bail|required|max:32',
+                'last_name' => 'bail|required|max:32',
+                'password' => 'bail|required|min:8',
+                'confirm_password' => 'bail|required||min:8',
+                'code' => 'bail|required'
+            ],
+            [
+                'first_name.required' => 'Укажите имя!',
+                'first_name.max' => 'Имя длинее 32 символов!',
+                'last_name.required' => 'Укажите фамилию!',
+                'last_name.max' => 'Фамилия длинее 32 символов!',
+                'password.required' => 'Укажите пароль!',
+                'password.min' => 'Пароль корече 8 символов!',
+                'confirm_password.required' => 'Подтвердите пароль!',
+                'confirm_password.min' => 'Пароль корече 8 символов!',
+                'code.required' => 'Укажите код безопасности!'
+            ]
+        );
+
+        if ($validator->fails()) {
+            throw new UncategorizedApiException($validator->errors()->first());
+        }
+
+        if ($request->post('password') !== $request->post('confirm_password')) {
+            throw new UncategorizedApiException('Пароли не совпадают!');
+        }
+
+        $phone = SafeVar::get($request->cookie('phone'));
+        $code = SafeVar::get($request->cookie('code'));
+
+        if (!$phone) {
+            throw new UncategorizedApiException('Номер телефона не определен!');
+        }
+
+        if (!$code) {
+            throw new UncategorizedApiException('Код безопасности не определен!');
+        }
+
+        $dataForCreating = $request->only(['first_name', 'last_name', 'password']);
+
+        $dataForCreating['phone'] = substr($phone, -10);
+        $dataForCreating['phone_code'] = Str::before($phone, $dataForCreating['phone']);
+
+        try {
+            Patient::create($dataForCreating);
+
+            $authCookies = Authorization::auth(
+                'patient',
+                collect(compact('code')),
+                'code',
+                true
+            );
+
+            return response()->json([
+                'id' => $authCookies['id'][0],
+                'token' => $authCookies['token'][0],
+                'entityName' => $authCookies['entityName'][0]
+            ]);
+        } catch (Throwable $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function isAuth()
     {
         try {
@@ -241,7 +314,7 @@ class PatientController extends Controller
                 'patient',
                 collect($request->only(['phone', 'password'])),
                 'password',
-                $request->post('needToSave') === 'true'
+                true
             );
 
             return response()->json([
@@ -281,7 +354,7 @@ class PatientController extends Controller
                 'patient',
                 collect($request->only(['code'])),
                 'code',
-                $request->post('needToSave') === 'true'
+                true
             );
 
             return response()->json([

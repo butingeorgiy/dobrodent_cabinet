@@ -30,8 +30,8 @@ class SmsCodeController extends Controller
         }
 
         return response()->json([
-            'code_uuid' => $codeUuid,
-            'phone_uuid' => $phoneUuid
+            'code_uuid' => encrypt($codeUuid, false),
+            'phone_uuid' => encrypt($phoneUuid, false)
         ]);
     }
 

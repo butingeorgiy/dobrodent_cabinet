@@ -10,6 +10,8 @@ Route::post('/patients/login-by-code', 'Api\PatientController@loginByCode');
 
 Route::post('/patients/is-auth', 'Api\PatientController@isAuth');
 
+Route::post('/patients/create', 'Api\PatientController@create');
+
 Route::get('/doctors/patient/search/{offset}', 'Api\DoctorController@get')
     ->middleware('auth.api:patient');
 
