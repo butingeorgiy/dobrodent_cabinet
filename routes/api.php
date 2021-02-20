@@ -2,6 +2,8 @@
 
 Route::post('/sms-code/send', 'Api\SmsCodeController@send');
 
+Route::post('/sms-code/check', 'Api\SmsCodeController@check');
+
 Route::post('/patients/login-by-password', 'Api\PatientController@loginByPassword');
 
 Route::post('/patients/is-exist/{field}/{phone}', 'Api\PatientController@isExist');

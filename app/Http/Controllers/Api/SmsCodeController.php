@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\Api\UncategorizedApiException;
 use App\Facades\SafeVar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class SmsCodeController extends Controller
 {
@@ -35,5 +37,30 @@ class SmsCodeController extends Controller
         ]);
     }
 
+    public function check(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'code' => 'bail|required'
+            ],
+            [
+                'code.required' => 'Необходимо указать код!'
+            ]
+        );
 
+        if ($validator->fails()) {
+            throw new UncategorizedApiException($validator->errors()->first());
+        }
+
+        $code = SafeVar::get($request->cookie('code'));
+
+        if (!$code) {
+            throw new UncategorizedApiException('Код не определен!');
+        }
+
+        return response()->json([
+            'confirmed' => $code !== $request->post('code')
+        ]);
+    }
 }
