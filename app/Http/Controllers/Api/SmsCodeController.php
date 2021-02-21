@@ -60,7 +60,7 @@ class SmsCodeController extends Controller
         }
 
         return response()->json([
-            'confirmed' => $code !== $request->post('code')
+            'confirmed' => $code === $request->post('code')
         ]);
     }
 }
