@@ -14,7 +14,7 @@ Route::post('/patients/is-auth', 'Api\PatientController@isAuth');
 
 Route::post('/patients/create', 'Api\PatientController@create');
 
-Route::get('/patients/info/{id}', 'Api\PatientController@getInfo')
+Route::get('/patients/info', 'Api\PatientController@getInfo')
     ->middleware('auth.api:patient');
 
 Route::get('/doctors/patient/search/{offset}', 'Api\DoctorController@get')
