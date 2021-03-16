@@ -369,4 +369,16 @@ class PatientController extends Controller
             ]);
         }
     }
+
+    public function getInfo($id)
+    {
+        $patient = Patient::select('first_name', 'last_name', 'middle_name', 'email', 'birthday', 'gender')->where('id', $id)->first();
+
+        if (!$patient) {
+            throw new Exception('Пользователь не найден!');
+        }
+
+        return response()
+            ->json($patient->toArray());
+    }
 }

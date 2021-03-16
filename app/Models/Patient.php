@@ -43,7 +43,7 @@ class Patient extends Model
     {
         $cbTime = Carbon::parse($value);
 
-        return $cbTime->toDateString();
+        return $cbTime->format('d.m.Y');
     }
 
     static public function searchByAdministrator($value, $offset)
