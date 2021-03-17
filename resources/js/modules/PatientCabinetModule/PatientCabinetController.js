@@ -29,7 +29,6 @@ export default class PatientCabinetController extends EventHandler {
             locale: Russian,
             onChange: (selectedDates, dateStr, instance) => {
                 this.domElements.patientBirthdayHiddenInput.value = Helper.parseDateToString(selectedDates[0]);
-                console.log(this.domElements.patientBirthdayHiddenInput.value);
             }
         });
     }

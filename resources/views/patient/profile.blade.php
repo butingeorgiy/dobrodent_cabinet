@@ -50,7 +50,7 @@
                                       2 0 002 2z" />
                     </svg>
                     <input class="text-center bg-white w-28 focus:outline-none text-gray-500 placeholder-gray-500 opacity-100" type="text" name="birthday" value="{{ $patient->birthday ? \Illuminate\Support\Carbon::parse($patient->birthday)->format('d.m.Y') : '' }}" required placeholder="дд.мм.гггг">
-                    <input type="hidden" name="birthday">
+                    <input type="hidden" name="birthday" value="{{ $patient->birthday }}">
                 </span>
             </label>
             <span class="flex items-center text-red-500 text-sm select-none error-message {{ !$errors->any() ? 'hidden' : '' }}">
