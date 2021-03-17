@@ -378,7 +378,15 @@ class PatientController extends Controller
             throw new Exception('Пользователь не найден!');
         }
 
+        $output = $patient->only('first_name', 'last_name', 'middle_name', 'email', 'birthday', 'gender');
+
+        $output['profile_photo'] = asset('images/default_profile.jpg');
+
+        if (Storage::exists('profile_photos/patients/' . $patient->id . '.jpeg')) {
+            $output['profile_photo'] = 'data:image/jpg;base64,' . base64_encode(Storage::get('profile_photos/patients/' . $patient->id . '.jpeg'));
+        }
+
         return response()
-            ->json($patient->only('first_name', 'last_name', 'middle_name', 'email', 'birthday', 'gender'));
+            ->json($output);
     }
 }
