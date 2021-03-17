@@ -41,9 +41,11 @@ class Patient extends Model
 
     public function getBirthdayAttribute($value)
     {
-        $cbTime = Carbon::parse($value);
+        if (!$value) {
+            return null;
+        }
 
-        return $cbTime->format('Y-m-d');
+        return Carbon::parse($value)->format('Y-m-d');
     }
 
     static public function searchByAdministrator($value, $offset)
